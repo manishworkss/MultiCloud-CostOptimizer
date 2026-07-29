@@ -27,18 +27,30 @@ public class User {
     @Column(name = "mfa_enabled", nullable = false)
     private boolean mfaEnabled = false;
 
+    @Column(name = "email_verified", nullable = false)
+    private boolean emailVerified = false;
+
+    @Column(name = "email_otp_code")
+    private String emailOtpCode;
+
+    @Column(name = "email_otp_expiry")
+    private LocalDateTime emailOtpExpiry;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     public User() {}
 
-    public User(String userId, String name, String email, String passwordHash, String role, boolean mfaEnabled, LocalDateTime createdAt) {
+    public User(String userId, String name, String email, String passwordHash, String role, boolean mfaEnabled, boolean emailVerified, String emailOtpCode, LocalDateTime emailOtpExpiry, LocalDateTime createdAt) {
         this.userId = userId;
         this.name = name;
         this.email = email;
         this.passwordHash = passwordHash;
         this.role = role;
         this.mfaEnabled = mfaEnabled;
+        this.emailVerified = emailVerified;
+        this.emailOtpCode = emailOtpCode;
+        this.emailOtpExpiry = emailOtpExpiry;
         this.createdAt = createdAt;
     }
 
@@ -65,6 +77,15 @@ public class User {
     public boolean isMfaEnabled() { return mfaEnabled; }
     public void setMfaEnabled(boolean mfaEnabled) { this.mfaEnabled = mfaEnabled; }
 
+    public boolean isEmailVerified() { return emailVerified; }
+    public void setEmailVerified(boolean emailVerified) { this.emailVerified = emailVerified; }
+
+    public String getEmailOtpCode() { return emailOtpCode; }
+    public void setEmailOtpCode(String emailOtpCode) { this.emailOtpCode = emailOtpCode; }
+
+    public LocalDateTime getEmailOtpExpiry() { return emailOtpExpiry; }
+    public void setEmailOtpExpiry(LocalDateTime emailOtpExpiry) { this.emailOtpExpiry = emailOtpExpiry; }
+
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
@@ -77,6 +98,9 @@ public class User {
         private String passwordHash;
         private String role = "ROLE_USER";
         private boolean mfaEnabled = false;
+        private boolean emailVerified = false;
+        private String emailOtpCode;
+        private LocalDateTime emailOtpExpiry;
         private LocalDateTime createdAt;
 
         public Builder userId(String userId) { this.userId = userId; return this; }
@@ -85,10 +109,13 @@ public class User {
         public Builder passwordHash(String passwordHash) { this.passwordHash = passwordHash; return this; }
         public Builder role(String role) { this.role = role; return this; }
         public Builder mfaEnabled(boolean mfaEnabled) { this.mfaEnabled = mfaEnabled; return this; }
+        public Builder emailVerified(boolean emailVerified) { this.emailVerified = emailVerified; return this; }
+        public Builder emailOtpCode(String emailOtpCode) { this.emailOtpCode = emailOtpCode; return this; }
+        public Builder emailOtpExpiry(LocalDateTime emailOtpExpiry) { this.emailOtpExpiry = emailOtpExpiry; return this; }
         public Builder createdAt(LocalDateTime createdAt) { this.createdAt = createdAt; return this; }
 
         public User build() {
-            return new User(userId, name, email, passwordHash, role, mfaEnabled, createdAt);
+            return new User(userId, name, email, passwordHash, role, mfaEnabled, emailVerified, emailOtpCode, emailOtpExpiry, createdAt);
         }
     }
 }

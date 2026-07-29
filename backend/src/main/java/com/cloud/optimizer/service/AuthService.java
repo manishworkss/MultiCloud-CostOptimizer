@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class AuthService {
@@ -23,27 +24,49 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider tokenProvider;
     private final MfaService mfaService;
+    private final EmailService emailService;
 
     public AuthService(UserRepository userRepository,
                        UserMfaRepository userMfaRepository,
                        PasswordEncoder passwordEncoder,
                        JwtTokenProvider tokenProvider,
-                       MfaService mfaService) {
+                       MfaService mfaService,
+                       EmailService emailService) {
         this.userRepository = userRepository;
         this.userMfaRepository = userMfaRepository;
         this.passwordEncoder = passwordEncoder;
         this.tokenProvider = tokenProvider;
         this.mfaService = mfaService;
+        this.emailService = emailService;
     }
 
     @Transactional
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("Email is already registered");
+            User existing = userRepository.findByEmail(request.getEmail()).orElse(null);
+            if (existing != null && !existing.isEmailVerified()) {
+                // Resend OTP if user registered previously but hasn't verified
+                String otp = emailService.generate6DigitOtp();
+                existing.setEmailOtpCode(otp);
+                existing.setEmailOtpExpiry(LocalDateTime.now().plusMinutes(10));
+                userRepository.save(existing);
+                emailService.sendEmailOtp(existing.getEmail(), otp);
+
+                return AuthResponse.builder()
+                        .userId(existing.getUserId())
+                        .email(existing.getEmail())
+                        .name(existing.getName())
+                        .role(existing.getRole())
+                        .emailVerificationRequired(true)
+                        .build();
+            }
+            throw new IllegalArgumentException("Email is already registered and verified");
         }
 
         String role = (request.getRole() != null && !request.getRole().isBlank()) 
                 ? request.getRole() : "ROLE_USER";
+
+        String otp = emailService.generate6DigitOtp();
 
         User user = User.builder()
                 .name(request.getName())
@@ -51,8 +74,45 @@ public class AuthService {
                 .passwordHash(passwordEncoder.encode(request.getPassword()))
                 .role(role)
                 .mfaEnabled(false)
+                .emailVerified(false)
+                .emailOtpCode(otp)
+                .emailOtpExpiry(LocalDateTime.now().plusMinutes(10))
                 .build();
 
+        userRepository.save(user);
+
+        // Send Email OTP
+        emailService.sendEmailOtp(user.getEmail(), otp);
+
+        return AuthResponse.builder()
+                .userId(user.getUserId())
+                .email(user.getEmail())
+                .name(user.getName())
+                .role(user.getRole())
+                .emailVerificationRequired(true)
+                .build();
+    }
+
+    @Transactional
+    public AuthResponse verifyEmailOtp(EmailOtpVerifyRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        if (user.isEmailVerified()) {
+            throw new IllegalArgumentException("Email is already verified");
+        }
+
+        if (user.getEmailOtpCode() == null || !user.getEmailOtpCode().equals(request.getOtpCode().trim())) {
+            throw new IllegalArgumentException("Invalid Email Verification OTP code");
+        }
+
+        if (user.getEmailOtpExpiry() != null && user.getEmailOtpExpiry().isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Email OTP has expired. Please request a new code.");
+        }
+
+        user.setEmailVerified(true);
+        user.setEmailOtpCode(null);
+        user.setEmailOtpExpiry(null);
         userRepository.save(user);
 
         String accessToken = tokenProvider.generateAccessToken(user.getUserId(), user.getEmail(), user.getRole());
@@ -66,7 +126,7 @@ public class AuthService {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .mfaEnabled(false)
-                .mfaRequired(false)
+                .emailVerificationRequired(false)
                 .build();
     }
 
@@ -76,6 +136,23 @@ public class AuthService {
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
             throw new IllegalArgumentException("Invalid email or password");
+        }
+
+        if (!user.isEmailVerified()) {
+            // Trigger new Email OTP if trying to login unverified
+            String otp = emailService.generate6DigitOtp();
+            user.setEmailOtpCode(otp);
+            user.setEmailOtpExpiry(LocalDateTime.now().plusMinutes(10));
+            userRepository.save(user);
+            emailService.sendEmailOtp(user.getEmail(), otp);
+
+            return AuthResponse.builder()
+                    .userId(user.getUserId())
+                    .email(user.getEmail())
+                    .name(user.getName())
+                    .role(user.getRole())
+                    .emailVerificationRequired(true)
+                    .build();
         }
 
         if (user.isMfaEnabled()) {
@@ -102,7 +179,45 @@ public class AuthService {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .mfaEnabled(false)
-                .mfaRequired(false)
+                .emailVerificationRequired(false)
+                .build();
+    }
+
+    @Transactional
+    public AuthResponse googleAuth(GoogleAuthRequest request) {
+        String email = request.getEmail();
+        String name = request.getName() != null ? request.getName() : "Google User";
+
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("Invalid Google token payload");
+        }
+
+        User user = userRepository.findByEmail(email).orElse(null);
+
+        if (user == null) {
+            user = User.builder()
+                    .name(name)
+                    .email(email)
+                    .passwordHash(passwordEncoder.encode(UUID.randomUUID().toString()))
+                    .role("ROLE_USER")
+                    .mfaEnabled(false)
+                    .emailVerified(true)
+                    .build();
+            userRepository.save(user);
+        }
+
+        String accessToken = tokenProvider.generateAccessToken(user.getUserId(), user.getEmail(), user.getRole());
+        String refreshToken = tokenProvider.generateRefreshToken(user.getUserId());
+
+        return AuthResponse.builder()
+                .userId(user.getUserId())
+                .email(user.getEmail())
+                .name(user.getName())
+                .role(user.getRole())
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .mfaEnabled(user.isMfaEnabled())
+                .emailVerificationRequired(false)
                 .build();
     }
 

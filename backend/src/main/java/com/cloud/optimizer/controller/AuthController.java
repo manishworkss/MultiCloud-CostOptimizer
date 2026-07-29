@@ -23,9 +23,19 @@ public class AuthController {
         return ResponseEntity.ok(authService.register(request));
     }
 
+    @PostMapping("/verify-email-otp")
+    public ResponseEntity<AuthResponse> verifyEmailOtp(@Valid @RequestBody EmailOtpVerifyRequest request) {
+        return ResponseEntity.ok(authService.verifyEmailOtp(request));
+    }
+
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
+    }
+
+    @PostMapping("/google")
+    public ResponseEntity<AuthResponse> googleAuth(@Valid @RequestBody GoogleAuthRequest request) {
+        return ResponseEntity.ok(authService.googleAuth(request));
     }
 
     @PostMapping("/mfa/setup")

@@ -28,6 +28,26 @@ spring:
       port: 6379
       timeout: 2000ms
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: noreply.costmatrix@gmail.com
+    password: sampleapppassword
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 1048291048102-samplegoogleclientid.apps.googleusercontent.com
+            client-secret: GOCSPX-sampleclientsecret
+
 app:
   jwt:
     secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970

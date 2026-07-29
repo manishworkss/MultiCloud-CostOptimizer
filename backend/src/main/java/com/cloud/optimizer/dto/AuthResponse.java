@@ -10,11 +10,12 @@ public class AuthResponse {
     private String refreshToken;
     private boolean mfaRequired;
     private boolean mfaEnabled;
+    private boolean emailVerificationRequired;
     private String preMfaToken;
 
     public AuthResponse() {}
 
-    public AuthResponse(String userId, String email, String name, String role, String accessToken, String refreshToken, boolean mfaRequired, boolean mfaEnabled, String preMfaToken) {
+    public AuthResponse(String userId, String email, String name, String role, String accessToken, String refreshToken, boolean mfaRequired, boolean mfaEnabled, boolean emailVerificationRequired, String preMfaToken) {
         this.userId = userId;
         this.email = email;
         this.name = name;
@@ -23,6 +24,7 @@ public class AuthResponse {
         this.refreshToken = refreshToken;
         this.mfaRequired = mfaRequired;
         this.mfaEnabled = mfaEnabled;
+        this.emailVerificationRequired = emailVerificationRequired;
         this.preMfaToken = preMfaToken;
     }
 
@@ -50,6 +52,9 @@ public class AuthResponse {
     public boolean isMfaEnabled() { return mfaEnabled; }
     public void setMfaEnabled(boolean mfaEnabled) { this.mfaEnabled = mfaEnabled; }
 
+    public boolean isEmailVerificationRequired() { return emailVerificationRequired; }
+    public void setEmailVerificationRequired(boolean emailVerificationRequired) { this.emailVerificationRequired = emailVerificationRequired; }
+
     public String getPreMfaToken() { return preMfaToken; }
     public void setPreMfaToken(String preMfaToken) { this.preMfaToken = preMfaToken; }
 
@@ -64,6 +69,7 @@ public class AuthResponse {
         private String refreshToken;
         private boolean mfaRequired;
         private boolean mfaEnabled;
+        private boolean emailVerificationRequired;
         private String preMfaToken;
 
         public Builder userId(String userId) { this.userId = userId; return this; }
@@ -74,10 +80,11 @@ public class AuthResponse {
         public Builder refreshToken(String refreshToken) { this.refreshToken = refreshToken; return this; }
         public Builder mfaRequired(boolean mfaRequired) { this.mfaRequired = mfaRequired; return this; }
         public Builder mfaEnabled(boolean mfaEnabled) { this.mfaEnabled = mfaEnabled; return this; }
+        public Builder emailVerificationRequired(boolean emailVerificationRequired) { this.emailVerificationRequired = emailVerificationRequired; return this; }
         public Builder preMfaToken(String preMfaToken) { this.preMfaToken = preMfaToken; return this; }
 
         public AuthResponse build() {
-            return new AuthResponse(userId, email, name, role, accessToken, refreshToken, mfaRequired, mfaEnabled, preMfaToken);
+            return new AuthResponse(userId, email, name, role, accessToken, refreshToken, mfaRequired, mfaEnabled, emailVerificationRequired, preMfaToken);
         }
     }
 }

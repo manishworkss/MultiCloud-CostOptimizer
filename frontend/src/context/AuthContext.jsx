@@ -22,6 +22,10 @@ export const AuthProvider = ({ children }) => {
     const response = await api.post('/auth/login', { email, password });
     const data = response.data;
 
+    if (data.emailVerificationRequired) {
+      return { emailVerificationRequired: true, email: data.email };
+    }
+
     if (data.mfaRequired) {
       setMfaRequired(true);
       setPreMfaToken(data.preMfaToken);
@@ -37,6 +41,21 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (name, email, password) => {
     const response = await api.post('/auth/register', { name, email, password });
+    const data = response.data;
+    return data; // { emailVerificationRequired: true, email: ... }
+  };
+
+  const verifyEmailOtp = async (email, otpCode) => {
+    const response = await api.post('/auth/verify-email-otp', { email, otpCode });
+    const data = response.data;
+    localStorage.setItem('accessToken', data.accessToken);
+    localStorage.setItem('userData', JSON.stringify(data));
+    setUser(data);
+    return data;
+  };
+
+  const googleAuth = async (googleData) => {
+    const response = await api.post('/auth/google', googleData);
     const data = response.data;
     localStorage.setItem('accessToken', data.accessToken);
     localStorage.setItem('userData', JSON.stringify(data));
@@ -60,7 +79,7 @@ export const AuthProvider = ({ children }) => {
 
   const setupMfa = async () => {
     const response = await api.post('/auth/mfa/setup');
-    return response.data; // { secretKey, qrCodeUrl, backupCodes }
+    return response.data;
   };
 
   const logout = () => {
@@ -79,6 +98,8 @@ export const AuthProvider = ({ children }) => {
         mfaRequired,
         login,
         register,
+        verifyEmailOtp,
+        googleAuth,
         verifyMfa,
         setupMfa,
         logout,
