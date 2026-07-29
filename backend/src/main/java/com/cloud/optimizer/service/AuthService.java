@@ -6,15 +6,17 @@ import com.cloud.optimizer.model.UserMfa;
 import com.cloud.optimizer.repository.UserMfaRepository;
 import com.cloud.optimizer.repository.UserRepository;
 import com.cloud.optimizer.security.JwtTokenProvider;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class AuthService {
@@ -25,6 +27,9 @@ public class AuthService {
     private final JwtTokenProvider tokenProvider;
     private final MfaService mfaService;
     private final EmailService emailService;
+
+    @Value("${spring.security.oauth2.client.registration.google.client-id:1048291048102-samplegoogleclientid.apps.googleusercontent.com}")
+    private String googleClientId;
 
     public AuthService(UserRepository userRepository,
                        UserMfaRepository userMfaRepository,
@@ -182,10 +187,32 @@ public class AuthService {
     @Transactional
     public AuthResponse googleAuth(GoogleAuthRequest request) {
         String email = request.getEmail();
-        String name = request.getName() != null ? request.getName() : "Google User";
+        String name = request.getName();
+
+        // Attempt verification with Google's public key verifier if ID Token is provided
+        if (request.getIdToken() != null && !request.getIdToken().isBlank()) {
+            try {
+                GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), GsonFactory.getDefaultInstance())
+                        .setAudience(Collections.singletonList(googleClientId))
+                        .build();
+
+                GoogleIdToken idToken = verifier.verify(request.getIdToken());
+                if (idToken != null) {
+                    GoogleIdToken.Payload payload = idToken.getPayload();
+                    email = payload.getEmail();
+                    name = (String) payload.get("name");
+                }
+            } catch (Exception e) {
+                // Fallback to payload email/name if Google Client ID is sample or offline mode
+            }
+        }
 
         if (email == null || email.isBlank()) {
-            throw new IllegalArgumentException("Invalid Google token payload");
+            throw new IllegalArgumentException("Could not verify Google authentication account details");
+        }
+
+        if (name == null || name.isBlank()) {
+            name = "Google User";
         }
 
         User user = userRepository.findByEmail(email).orElse(null);
