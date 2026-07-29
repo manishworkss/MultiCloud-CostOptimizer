@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { ShieldCheck, Cpu, LogOut, User as UserIcon, Lock } from 'lucide-react';
+import { ShieldCheck, Cpu, LogOut, User as UserIcon } from 'lucide-react';
 
-const Navbar = ({ onOpenMfaSetup }) => {
+const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
 
   return (
@@ -43,14 +43,10 @@ const Navbar = ({ onOpenMfaSetup }) => {
 
       {user && (
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          {user.mfaEnabled ? (
+          {user.mfaEnabled && (
             <span className="badge badge-emerald" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <ShieldCheck size={14} /> 2FA Active
+              <ShieldCheck size={14} /> 2FA Verified
             </span>
-          ) : (
-            <button className="btn-outline" onClick={onOpenMfaSetup} style={{ padding: '6px 12px', fontSize: '0.8rem' }}>
-              <Lock size={14} /> Enable 2FA (TOTP)
-            </button>
           )}
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderLeft: '1px solid #1e293b', paddingLeft: '16px' }}>
@@ -58,7 +54,7 @@ const Navbar = ({ onOpenMfaSetup }) => {
             <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#f8fafc' }}>{user.name}</span>
           </div>
 
-          <button className="btn-outline" onClick={logout} style={{ padding: '6px 12px', fontSize: '0.8rem', borderColor: '#334155' }}>
+          <button className="btn-outline" onClick={logout} style={{ padding: '6px 12px', fontSize: '0.8rem' }}>
             <LogOut size={14} /> Logout
           </button>
         </div>
