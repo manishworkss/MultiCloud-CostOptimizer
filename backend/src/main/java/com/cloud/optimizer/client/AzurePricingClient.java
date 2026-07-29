@@ -4,6 +4,9 @@ import com.cloud.optimizer.dto.PricingSnapshotDto;
 import com.cloud.optimizer.model.DeploymentRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.retry.annotation.Retryable;
+import org.springframework.retry.annotation.Backoff;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -26,6 +29,8 @@ public class AzurePricingClient implements CloudPricingClient {
     }
 
     @Override
+    @Cacheable(value = "azure_pricing", key = "#request.requestId")
+    @Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000))
     public PricingSnapshotDto fetchLivePricing(DeploymentRequest request) {
         BigDecimal hourlyRate = new BigDecimal("0.096"); // Fallback standard Azure Standard_B2s
         BigDecimal storageCostPerGb = new BigDecimal("0.115"); // Managed SSD

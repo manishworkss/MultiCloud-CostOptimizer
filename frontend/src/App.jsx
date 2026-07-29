@@ -7,6 +7,9 @@ import AuthScreen from './components/AuthScreen';
 import MfaModal from './components/MfaModal';
 import DeploymentSpecForm from './components/DeploymentSpecForm';
 import CostComparisonDashboard from './components/CostComparisonDashboard';
+import CloudTariffsDashboard from './components/CloudTariffsDashboard';
+import AuditReportsDashboard from './components/AuditReportsDashboard';
+import SecurityDashboard from './components/SecurityDashboard';
 import api from './services/api';
 import { Activity, LayoutDashboard, RefreshCw } from 'lucide-react';
 
@@ -73,47 +76,50 @@ function App() {
             {/* Main Content Viewport */}
             <main style={{ flex: 1, padding: '28px 36px', overflowY: 'auto' }}>
               
-              {/* Header Title Bar */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
-                <div>
-                  <h1 style={{ fontSize: '1.6rem', margin: 0, fontFamily: 'Outfit, sans-serif', color: '#f8fafc' }}>
-                    Multi-Cloud Infrastructure Placement Engine
-                  </h1>
-                  <p style={{ color: '#94a3b8', fontSize: '0.85rem', margin: '4px 0 0 0' }}>
-                    Benchmark real-time tariffs across AWS, Azure, GCP, and OCI for workload placement optimization.
-                  </p>
-                </div>
+              {/* Dynamic Content Viewport */}
+              {activeTab === 'placement' && (
+                <>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
+                    <div>
+                      <h1 style={{ fontSize: '1.6rem', margin: 0, fontFamily: 'Outfit, sans-serif', color: '#f8fafc' }}>
+                        Multi-Cloud Infrastructure Placement Engine
+                      </h1>
+                      <p style={{ color: '#94a3b8', fontSize: '0.85rem', margin: '4px 0 0 0' }}>
+                        Benchmark real-time tariffs across AWS, Azure, GCP, and OCI for workload placement optimization.
+                      </p>
+                    </div>
 
-                <div style={{ display: 'flex', gap: '12px' }}>
-                  <button
-                    className="btn-outline"
-                    onClick={() => {
-                      if (recommendations) setRecommendations([...recommendations]);
-                    }}
-                    style={{ fontSize: '0.8rem', padding: '8px 14px', display: 'flex', alignItems: 'center', gap: '6px' }}
-                  >
-                    <RefreshCw size={14} /> Refresh Live Rates
-                  </button>
-                </div>
-              </div>
+                    <div style={{ display: 'flex', gap: '12px' }}>
+                      <button
+                        className="btn-outline"
+                        onClick={() => {
+                          if (recommendations) setRecommendations([...recommendations]);
+                        }}
+                        style={{ fontSize: '0.8rem', padding: '8px 14px', display: 'flex', alignItems: 'center', gap: '6px' }}
+                      >
+                        <RefreshCw size={14} /> Refresh Live Rates
+                      </button>
+                    </div>
+                  </div>
 
-              {/* KPI Metrics Summary Row */}
-              <KpiMetrics recommendations={recommendations} />
+                  {/* KPI Metrics Summary Row */}
+                  <KpiMetrics recommendations={recommendations} />
 
-              {/* Main Dual-Column Grid Layout */}
-              <div style={{ display: 'grid', gridTemplateColumns: '340px 1fr', gap: '24px', alignItems: 'start' }}>
-                
-                {/* Left Configurator Column */}
-                <div>
-                  <DeploymentSpecForm onSubmitSpec={handleSubmitSpec} loading={evaluating} />
-                </div>
+                  {/* Main Dual-Column Grid Layout */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '340px 1fr', gap: '24px', alignItems: 'start' }}>
+                    <div>
+                      <DeploymentSpecForm onSubmitSpec={handleSubmitSpec} loading={evaluating} />
+                    </div>
+                    <div>
+                      <CostComparisonDashboard recommendations={recommendations} requestId={currentRequestId} />
+                    </div>
+                  </div>
+                </>
+              )}
 
-                {/* Right Results Column */}
-                <div>
-                  <CostComparisonDashboard recommendations={recommendations} requestId={currentRequestId} />
-                </div>
-
-              </div>
+              {activeTab === 'providers' && <CloudTariffsDashboard />}
+              {activeTab === 'reports' && <AuditReportsDashboard />}
+              {activeTab === 'security' && <SecurityDashboard onOpenMfaSetup={handleOpenMfaSetup} />}
 
             </main>
           </div>
