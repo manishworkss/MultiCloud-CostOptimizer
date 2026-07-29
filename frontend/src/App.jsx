@@ -9,6 +9,7 @@ import DeploymentSpecForm from './components/DeploymentSpecForm';
 import CostComparisonDashboard from './components/CostComparisonDashboard';
 import CloudTariffsDashboard from './components/CloudTariffsDashboard';
 import AuditReportsDashboard from './components/AuditReportsDashboard';
+import AiChatWidget from './components/AiChatWidget';
 import api from './services/api';
 import { Activity, LayoutDashboard, RefreshCw } from 'lucide-react';
 
@@ -121,6 +122,8 @@ function App() {
 
             </main>
           </div>
+
+          <AiChatWidget />
 
           <MfaModal
             isOpen={isMfaModalOpen || mfaRequired}

@@ -57,3 +57,7 @@ app:
 
   mfa:
     issuer: CostMatrix
+
+  ai:
+    gemini:
+      api-key: ${GEMINI_API_KEY:}
