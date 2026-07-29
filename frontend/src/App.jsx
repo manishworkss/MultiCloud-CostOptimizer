@@ -9,7 +9,6 @@ import DeploymentSpecForm from './components/DeploymentSpecForm';
 import CostComparisonDashboard from './components/CostComparisonDashboard';
 import CloudTariffsDashboard from './components/CloudTariffsDashboard';
 import AuditReportsDashboard from './components/AuditReportsDashboard';
-import SecurityDashboard from './components/SecurityDashboard';
 import api from './services/api';
 import { Activity, LayoutDashboard, RefreshCw } from 'lucide-react';
 
@@ -119,7 +118,6 @@ function App() {
 
               {activeTab === 'providers' && <CloudTariffsDashboard />}
               {activeTab === 'reports' && <AuditReportsDashboard />}
-              {activeTab === 'security' && <SecurityDashboard onOpenMfaSetup={handleOpenMfaSetup} />}
 
             </main>
           </div>

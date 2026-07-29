@@ -6,7 +6,6 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
     { id: 'placement', label: 'Placement Engine', icon: LayoutDashboard },
     { id: 'providers', label: 'Cloud Tariffs', icon: Cloud },
     { id: 'reports', label: 'Audit Reports', icon: FileSpreadsheet },
-    { id: 'security', label: 'Security & 2FA', icon: ShieldCheck },
   ];
 
   return (
