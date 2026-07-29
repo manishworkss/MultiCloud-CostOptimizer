@@ -12,12 +12,13 @@ const DeploymentSpecForm = ({ onSubmitSpec, loading }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmitSpec({
-      vcpu: parseInt(vcpu),
-      ramGb: parseInt(ramGb),
-      storageGb: parseInt(storageGb),
-      databaseEngine,
-      bandwidthGb: parseInt(bandwidthGb),
-      targetRegion,
+      cpu: `${vcpu} vCPU`,
+      ram: `${ramGb} GB`,
+      storage: `${storageGb} GB`,
+      operatingSystem: 'Linux',
+      databaseType: databaseEngine,
+      bandwidth: `${bandwidthGb} GB`,
+      region: targetRegion,
     });
   };
 
