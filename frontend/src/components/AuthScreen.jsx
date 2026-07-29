@@ -3,13 +3,12 @@ import { AuthContext } from '../context/AuthContext';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 import { Cpu, CheckCircle2, Mail, AlertCircle } from 'lucide-react';
 
-const GOOGLE_CLIENT_ID = '1048291048102-samplegoogleclientid.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = '293285306750-2dnrs7psq3f1on3j3i4djcphbvoo1euf.apps.googleusercontent.com';
 
 const GoogleSignInButton = ({ onAuthSuccess, onError }) => {
   const loginWithGoogle = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       try {
-        // Fetch verified user profile from Google OAuth2 userInfo endpoint
         const userInfoRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
           headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
         });
@@ -398,7 +397,6 @@ const AuthScreenContent = () => {
                 <div style={{ flex: 1, height: '1px', background: '#e2e8f0' }}></div>
               </div>
 
-              {/* Real Google OAuth2 Sign In Button */}
               <GoogleSignInButton
                 onAuthSuccess={handleGoogleSuccess}
                 onError={(err) => setError(err)}

@@ -31,8 +31,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: bcawithmanish0008@gmail.com
-    password: wukvvfthdvkskswl
+    username: ${SPRING_MAIL_USERNAME:bcawithmanish0008@gmail.com}
+    password: ${SPRING_MAIL_PASSWORD:wukvvfthdvkskswl}
     properties:
       mail:
         smtp:
@@ -45,8 +45,8 @@ spring:
       client:
         registration:
           google:
-            client-id: 1048291048102-samplegoogleclientid.apps.googleusercontent.com
-            client-secret: GOCSPX-sampleclientsecret
+            client-id: ${GOOGLE_CLIENT_ID:293285306750-samplegoogleclientid.apps.googleusercontent.com}
+            client-secret: ${GOOGLE_CLIENT_SECRET:GOCSPX-sampleclientsecret}
 
 app:
   jwt:

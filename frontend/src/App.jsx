@@ -1,16 +1,19 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from './context/AuthContext';
 import Navbar from './components/Navbar';
+import Sidebar from './components/Sidebar';
+import KpiMetrics from './components/KpiMetrics';
 import AuthScreen from './components/AuthScreen';
 import MfaModal from './components/MfaModal';
 import DeploymentSpecForm from './components/DeploymentSpecForm';
 import CostComparisonDashboard from './components/CostComparisonDashboard';
 import api from './services/api';
-import { Activity } from 'lucide-react';
+import { Activity, LayoutDashboard, RefreshCw } from 'lucide-react';
 
 function App() {
   const { user, loading, mfaRequired } = useContext(AuthContext);
 
+  const [activeTab, setActiveTab] = useState('placement');
   const [isMfaModalOpen, setIsMfaModalOpen] = useState(false);
   const [isMfaSetupMode, setIsMfaSetupMode] = useState(false);
 
@@ -51,30 +54,68 @@ function App() {
   if (loading) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', color: '#06b6d4' }}>
-        <Activity size={32} className="spinning" /> Loading CostMatrix...
+        <Activity size={32} className="spinning" /> Loading CostMatrix FinOps Platform...
       </div>
     );
   }
 
   return (
-    <div>
+    <div style={{ minHeight: '100vh', background: '#070a12', color: '#f8fafc' }}>
       {user ? (
-        /* Main Logged-In Workload Placement Application */
+        /* Logged-In Professional Enterprise FinOps Dashboard */
         <>
           <Navbar onOpenMfaSetup={handleOpenMfaSetup} />
-          <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px 24px' }}>
-            <div style={{ marginBottom: '28px' }}>
-              <h1 style={{ fontSize: '1.8rem' }}>Multi-Cloud Infrastructure Placement Engine</h1>
-              <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>
-                Select target compute, memory, database, and regional traffic requirements to evaluate live AWS, Azure, GCP, and OCI tariffs.
-              </p>
-            </div>
+          
+          <div style={{ display: 'flex', minHeight: 'calc(100vh - 65px)' }}>
+            {/* Sidebar Navigation */}
+            <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
-            <DeploymentSpecForm onSubmitSpec={handleSubmitSpec} loading={evaluating} />
+            {/* Main Content Viewport */}
+            <main style={{ flex: 1, padding: '28px 36px', overflowY: 'auto' }}>
+              
+              {/* Header Title Bar */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
+                <div>
+                  <h1 style={{ fontSize: '1.6rem', margin: 0, fontFamily: 'Outfit, sans-serif', color: '#f8fafc' }}>
+                    Multi-Cloud Infrastructure Placement Engine
+                  </h1>
+                  <p style={{ color: '#94a3b8', fontSize: '0.85rem', margin: '4px 0 0 0' }}>
+                    Benchmark real-time tariffs across AWS, Azure, GCP, and OCI for workload placement optimization.
+                  </p>
+                </div>
 
-            <div style={{ marginTop: '32px' }}>
-              <CostComparisonDashboard recommendations={recommendations} requestId={currentRequestId} />
-            </div>
+                <div style={{ display: 'flex', gap: '12px' }}>
+                  <button
+                    className="btn-outline"
+                    onClick={() => {
+                      if (recommendations) setRecommendations([...recommendations]);
+                    }}
+                    style={{ fontSize: '0.8rem', padding: '8px 14px', display: 'flex', alignItems: 'center', gap: '6px' }}
+                  >
+                    <RefreshCw size={14} /> Refresh Live Rates
+                  </button>
+                </div>
+              </div>
+
+              {/* KPI Metrics Summary Row */}
+              <KpiMetrics recommendations={recommendations} />
+
+              {/* Main Dual-Column Grid Layout */}
+              <div style={{ display: 'grid', gridTemplateColumns: '340px 1fr', gap: '24px', alignItems: 'start' }}>
+                
+                {/* Left Configurator Column */}
+                <div>
+                  <DeploymentSpecForm onSubmitSpec={handleSubmitSpec} loading={evaluating} />
+                </div>
+
+                {/* Right Results Column */}
+                <div>
+                  <CostComparisonDashboard recommendations={recommendations} requestId={currentRequestId} />
+                </div>
+
+              </div>
+
+            </main>
           </div>
 
           <MfaModal
@@ -84,7 +125,7 @@ function App() {
           />
         </>
       ) : (
-        /* Realistic Split-Screen Sign In & Email OTP Auth Screen referencing Picture 2 */
+        /* Realistic Auth Screen */
         <AuthScreen />
       )}
     </div>

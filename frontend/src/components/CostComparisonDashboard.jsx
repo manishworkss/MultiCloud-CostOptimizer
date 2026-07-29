@@ -1,6 +1,6 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { TrendingDown, Download, Award, ShieldCheck, DollarSign, FileText } from 'lucide-react';
+import { Award, Download, FileText, CheckCircle2, ShieldCheck } from 'lucide-react';
 import api from '../services/api';
 
 const PROVIDER_COLORS = {
@@ -11,10 +11,16 @@ const PROVIDER_COLORS = {
 };
 
 const CostComparisonDashboard = ({ recommendations, requestId }) => {
-  if (!recommendations || recommendations.length === 0) return null;
+  if (!recommendations || recommendations.length === 0) {
+    return (
+      <div className="glass-panel" style={{ padding: '48px', textAlign: 'center', color: '#64748b' }}>
+        <h3 style={{ fontSize: '1.2rem', color: '#94a3b8', marginBottom: '8px' }}>Placement Engine Ready</h3>
+        <p style={{ fontSize: '0.85rem' }}>Select your hardware &amp; regional requirements on the left and click <strong>Run Placement Engine</strong> to calculate live multi-cloud cost benchmarks.</p>
+      </div>
+    );
+  }
 
   const winner = recommendations[0];
-  const maxCostRec = recommendations[recommendations.length - 1];
   const totalAnnualSavings = winner.estimatedSavings ? (winner.estimatedSavings * 12).toFixed(2) : '0.00';
 
   const chartData = recommendations.map((rec) => ({
@@ -46,7 +52,7 @@ const CostComparisonDashboard = ({ recommendations, requestId }) => {
       const response = await api.get(`/reports/csv/${requestId}`, {
         responseType: 'blob',
       });
-      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'text/csv' }));
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/csv' }));
       const link = document.createElement('a');
       link.href = url;
       link.setAttribute('download', `CostMatrix_Report_${requestId}.csv`);
@@ -59,57 +65,59 @@ const CostComparisonDashboard = ({ recommendations, requestId }) => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      {/* 1. Winner Callout Banner */}
-      <div className="glass-panel glow-box-emerald" style={{ padding: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      
+      {/* Top Winner Card Banner */}
+      <div className="glass-panel glow-box-emerald" style={{ padding: '20px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <div style={{ background: 'rgba(16, 185, 129, 0.2)', padding: '14px', borderRadius: '12px', color: '#10b981' }}>
-            <Award size={36} />
+          <div style={{ background: 'rgba(16, 185, 129, 0.18)', padding: '12px', borderRadius: '12px', color: '#10b981' }}>
+            <Award size={32} />
           </div>
           <div>
-            <div className="badge badge-emerald" style={{ marginBottom: '6px', display: 'inline-block' }}>
+            <div className="badge badge-emerald" style={{ marginBottom: '4px', fontSize: '0.72rem', display: 'inline-block' }}>
               #1 Optimal Placement Recommendation
             </div>
-            <h2 style={{ fontSize: '1.4rem' }}>
+            <h2 style={{ fontSize: '1.3rem', color: '#f8fafc' }}>
               {winner.providerName} ({winner.serviceName})
             </h2>
-            <p style={{ color: '#94a3b8', fontSize: '0.85rem' }}>
-              Score: <strong style={{ color: '#10b981' }}>{winner.recommendationScore} / 100</strong> | Region SLA Uptime: <strong>{winner.regionSlaUptime}%</strong>
+            <p style={{ color: '#94a3b8', fontSize: '0.82rem', margin: 0 }}>
+              Recommendation Score: <strong style={{ color: '#10b981' }}>{winner.recommendationScore} / 100</strong> | Region SLA Uptime: <strong>{winner.regionSlaUptime}%</strong>
             </p>
           </div>
         </div>
 
-        <div style={{ textAlign: 'right' }}>
-          <div style={{ fontSize: '0.8rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Projected Monthly TCO</div>
-          <div style={{ fontSize: '2rem', fontWeight: 800, color: '#10b981', fontFamily: 'Outfit, sans-serif' }}>
-            ${winner.totalMonthlyCost} <span style={{ fontSize: '0.9rem', color: '#64748b' }}>/ mo</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Projected Monthly TCO</div>
+            <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#10b981', fontFamily: 'Outfit, sans-serif' }}>
+              ${winner.totalMonthlyCost} <span style={{ fontSize: '0.8rem', color: '#64748b' }}>/ mo</span>
+            </div>
+            <div style={{ fontSize: '0.8rem', color: '#06b6d4', fontWeight: 600 }}>
+              Est. Annual Savings: ${totalAnnualSavings}
+            </div>
           </div>
-          <div style={{ fontSize: '0.85rem', color: '#06b6d4', fontWeight: 600 }}>
-            Est. Annual Savings: ${totalAnnualSavings}
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <button className="btn-emerald" onClick={handleDownloadPdf} style={{ fontSize: '0.8rem', padding: '8px 14px' }}>
+              <Download size={14} /> PDF Report
+            </button>
+            <button className="btn-outline" onClick={handleDownloadCsv} style={{ fontSize: '0.8rem', padding: '6px 12px' }}>
+              <FileText size={14} /> Export CSV
+            </button>
           </div>
         </div>
       </div>
 
-      {/* 2. Recharts Bar Comparison Chart */}
-      <div className="glass-panel" style={{ padding: '24px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
-          <div>
-            <h3 style={{ fontSize: '1.1rem' }}>Multi-Cloud Monthly TCO Comparison</h3>
-            <p style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Calculated compute + storage + database + bandwidth</p>
-          </div>
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <button className="btn-outline" onClick={handleDownloadCsv} style={{ fontSize: '0.8rem', padding: '6px 12px' }}>
-              <FileText size={14} /> Export CSV
-            </button>
-            <button className="btn-emerald" onClick={handleDownloadPdf} style={{ fontSize: '0.8rem', padding: '6px 12px' }}>
-              <Download size={14} /> Download PDF Audit Report
-            </button>
-          </div>
+      {/* Bar Chart Section */}
+      <div className="glass-panel" style={{ padding: '20px' }}>
+        <div style={{ marginBottom: '14px' }}>
+          <h3 style={{ fontSize: '1.05rem', color: '#f8fafc', margin: 0 }}>Multi-Cloud Monthly TCO Comparison</h3>
+          <p style={{ fontSize: '0.78rem', color: '#94a3b8', margin: '2px 0 0 0' }}>Real-time calculated tariffs (Compute + Storage + Database + Bandwidth)</p>
         </div>
 
-        <div style={{ width: '100%', height: 260 }}>
+        <div style={{ width: '100%', height: 220 }}>
           <ResponsiveContainer>
-            <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+            <BarChart data={chartData} margin={{ top: 15, right: 20, left: 10, bottom: 5 }}>
               <XAxis dataKey="name" stroke="#64748b" tick={{ fill: '#94a3b8', fontSize: 12 }} />
               <YAxis stroke="#64748b" tick={{ fill: '#94a3b8', fontSize: 12 }} unit="$" />
               <Tooltip
@@ -126,38 +134,50 @@ const CostComparisonDashboard = ({ recommendations, requestId }) => {
         </div>
       </div>
 
-      {/* 3. Provider Cards Matrix */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
+      {/* Provider Matrix Cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '14px' }}>
         {recommendations.map((rec, idx) => (
           <div
             key={rec.providerId}
             className="glass-panel"
             style={{
-              padding: '20px',
+              padding: '16px',
               borderTop: `4px solid ${PROVIDER_COLORS[rec.providerId] || '#06b6d4'}`,
               position: 'relative',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between'
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span className="mono" style={{ fontSize: '0.75rem', fontWeight: 700, color: PROVIDER_COLORS[rec.providerId] }}>
-                #{idx + 1} {rec.providerId}
-              </span>
-              <span className="badge badge-cyan">{rec.recommendationScore} Score</span>
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                <span className="mono" style={{ fontSize: '0.75rem', fontWeight: 700, color: PROVIDER_COLORS[rec.providerId] }}>
+                  #{idx + 1} {rec.providerId}
+                </span>
+                <span className="badge badge-cyan" style={{ fontSize: '0.7rem' }}>{rec.recommendationScore} Score</span>
+              </div>
+
+              <h4 style={{ fontSize: '0.95rem', margin: '4px 0 10px 0', color: '#f8fafc' }}>{rec.providerName}</h4>
+              <div style={{ fontSize: '1.3rem', fontWeight: 700, color: '#f8fafc', marginBottom: '8px', fontFamily: 'Outfit, sans-serif' }}>
+                ${rec.totalMonthlyCost} <span style={{ fontSize: '0.75rem', color: '#64748b' }}>/ mo</span>
+              </div>
             </div>
 
-            <h4 style={{ fontSize: '1rem', marginBottom: '12px' }}>{rec.providerName}</h4>
-            <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#f8fafc', marginBottom: '8px' }}>
-              ${rec.totalMonthlyCost} <span style={{ fontSize: '0.75rem', color: '#64748b' }}>/ mo</span>
-            </div>
-
-            <div style={{ fontSize: '0.8rem', color: '#94a3b8', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              <div>Yearly: <strong>${rec.totalYearlyCost}</strong></div>
-              <div>Est. Savings: <strong style={{ color: '#10b981' }}>${rec.estimatedSavings}</strong></div>
-              <div>SLA Uptime: <strong>{rec.regionSlaUptime}%</strong></div>
+            <div style={{ fontSize: '0.78rem', color: '#94a3b8', borderTop: '1px solid rgba(255, 255, 255, 0.05)', paddingTop: '10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span>Yearly:</span> <strong style={{ color: '#cbd5e1' }}>${rec.totalYearlyCost}</strong>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span>Est. Savings:</span> <strong style={{ color: '#10b981' }}>${rec.estimatedSavings}</strong>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span>SLA Uptime:</span> <strong style={{ color: '#3b82f6' }}>{rec.regionSlaUptime}%</strong>
+              </div>
             </div>
           </div>
         ))}
       </div>
+
     </div>
   );
 };
