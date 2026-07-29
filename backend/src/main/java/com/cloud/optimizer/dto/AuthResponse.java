@@ -12,11 +12,10 @@ public class AuthResponse {
     private boolean mfaEnabled;
     private boolean emailVerificationRequired;
     private String preMfaToken;
-    private String otpForDevTesting; // Included if SMTP is not configured
 
     public AuthResponse() {}
 
-    public AuthResponse(String userId, String email, String name, String role, String accessToken, String refreshToken, boolean mfaRequired, boolean mfaEnabled, boolean emailVerificationRequired, String preMfaToken, String otpForDevTesting) {
+    public AuthResponse(String userId, String email, String name, String role, String accessToken, String refreshToken, boolean mfaRequired, boolean mfaEnabled, boolean emailVerificationRequired, String preMfaToken) {
         this.userId = userId;
         this.email = email;
         this.name = name;
@@ -27,7 +26,6 @@ public class AuthResponse {
         this.mfaEnabled = mfaEnabled;
         this.emailVerificationRequired = emailVerificationRequired;
         this.preMfaToken = preMfaToken;
-        this.otpForDevTesting = otpForDevTesting;
     }
 
     public String getUserId() { return userId; }
@@ -60,9 +58,6 @@ public class AuthResponse {
     public String getPreMfaToken() { return preMfaToken; }
     public void setPreMfaToken(String preMfaToken) { this.preMfaToken = preMfaToken; }
 
-    public String getOtpForDevTesting() { return otpForDevTesting; }
-    public void setOtpForDevTesting(String otpForDevTesting) { this.otpForDevTesting = otpForDevTesting; }
-
     public static Builder builder() { return new Builder(); }
 
     public static class Builder {
@@ -76,7 +71,6 @@ public class AuthResponse {
         private boolean mfaEnabled;
         private boolean emailVerificationRequired;
         private String preMfaToken;
-        private String otpForDevTesting;
 
         public Builder userId(String userId) { this.userId = userId; return this; }
         public Builder email(String email) { this.email = email; return this; }
@@ -88,10 +82,9 @@ public class AuthResponse {
         public Builder mfaEnabled(boolean mfaEnabled) { this.mfaEnabled = mfaEnabled; return this; }
         public Builder emailVerificationRequired(boolean emailVerificationRequired) { this.emailVerificationRequired = emailVerificationRequired; return this; }
         public Builder preMfaToken(String preMfaToken) { this.preMfaToken = preMfaToken; return this; }
-        public Builder otpForDevTesting(String otpForDevTesting) { this.otpForDevTesting = otpForDevTesting; return this; }
 
         public AuthResponse build() {
-            return new AuthResponse(userId, email, name, role, accessToken, refreshToken, mfaRequired, mfaEnabled, emailVerificationRequired, preMfaToken, otpForDevTesting);
+            return new AuthResponse(userId, email, name, role, accessToken, refreshToken, mfaRequired, mfaEnabled, emailVerificationRequired, preMfaToken);
         }
     }
 }

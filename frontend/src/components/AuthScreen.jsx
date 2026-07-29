@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { Cpu, CheckCircle2, Mail, AlertCircle, Info } from 'lucide-react';
+import { Cpu, CheckCircle2, Mail, AlertCircle } from 'lucide-react';
 
 const AuthScreen = () => {
   const { login, register, verifyEmailOtp, googleAuth } = useContext(AuthContext);
@@ -13,7 +13,6 @@ const AuthScreen = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [otpCode, setOtpCode] = useState('');
-  const [devOtpHint, setDevOtpHint] = useState('');
 
   const [error, setError] = useState('');
   const [infoMsg, setInfoMsg] = useState('');
@@ -32,19 +31,13 @@ const AuthScreen = () => {
         const res = await register(name, email, password);
         if (res.emailVerificationRequired) {
           setIsOtpStep(true);
-          setInfoMsg(`A 6-digit OTP code has been sent to your email (${email}). Please enter it below to complete registration.`);
-          if (res.otpForDevTesting) {
-            setDevOtpHint(res.otpForDevTesting);
-          }
+          setInfoMsg(`A 6-digit OTP code has been sent directly to your email inbox (${email}). Please check your email and enter the code below.`);
         }
       } else {
         const res = await login(email, password);
         if (res.emailVerificationRequired) {
           setIsOtpStep(true);
           setInfoMsg(`Your email is not verified yet. A 6-digit OTP code has been sent to ${email}.`);
-          if (res.otpForDevTesting) {
-            setDevOtpHint(res.otpForDevTesting);
-          }
         }
       }
     } catch (err) {
@@ -210,23 +203,6 @@ const AuthScreen = () => {
             </div>
           )}
 
-          {devOtpHint && (
-            <div style={{
-              background: '#eff6ff',
-              border: '1px solid #bfdbfe',
-              color: '#1d4ed8',
-              padding: '10px 14px',
-              borderRadius: '8px',
-              fontSize: '0.85rem',
-              marginBottom: '20px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}>
-              <Info size={18} /> <span>Your 6-Digit Email Verification OTP is: <strong style={{ letterSpacing: '2px', fontSize: '1rem' }}>{devOtpHint}</strong></span>
-            </div>
-          )}
-
           {/* FORM */}
           <form onSubmit={handleSubmit}>
             {isOtpStep ? (
@@ -358,11 +334,11 @@ const AuthScreen = () => {
               }}
             >
               {submitting
-                ? 'Processing...'
+                ? 'Sending Email OTP...'
                 : isOtpStep
                 ? 'Verify Email & Log In'
                 : isRegisterMode
-                ? 'Register & Get Email OTP'
+                ? 'Register & Send Email OTP'
                 : 'Sign In'}
             </button>
           </form>
@@ -413,7 +389,7 @@ const AuthScreen = () => {
           <div style={{ textAlign: 'center', marginTop: '24px', fontSize: '0.85rem', color: '#64748b' }}>
             {isOtpStep ? (
               <button
-                onClick={() => { setIsOtpStep(false); setError(''); setInfoMsg(''); setDevOtpHint(''); }}
+                onClick={() => { setIsOtpStep(false); setError(''); setInfoMsg(''); }}
                 style={{ background: 'none', border: 'none', color: '#2563eb', cursor: 'pointer', fontWeight: 600 }}
               >
                 &larr; Back to Sign In
@@ -422,7 +398,7 @@ const AuthScreen = () => {
               <span>
                 {isRegisterMode ? 'Already have an account?' : "Don't have an account?"}{' '}
                 <button
-                  onClick={() => { setIsRegisterMode(!isRegisterMode); setError(''); setInfoMsg(''); setDevOtpHint(''); }}
+                  onClick={() => { setIsRegisterMode(!isRegisterMode); setError(''); setInfoMsg(''); }}
                   style={{ background: 'none', border: 'none', color: '#2563eb', cursor: 'pointer', fontWeight: 600 }}
                 >
                   {isRegisterMode ? 'Sign In' : 'Register'}

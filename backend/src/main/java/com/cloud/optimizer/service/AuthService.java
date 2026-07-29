@@ -49,7 +49,7 @@ public class AuthService {
                 existing.setEmailOtpCode(otp);
                 existing.setEmailOtpExpiry(LocalDateTime.now().plusMinutes(10));
                 userRepository.save(existing);
-                boolean sent = emailService.sendEmailOtp(existing.getEmail(), otp);
+                emailService.sendEmailOtp(existing.getEmail(), otp);
 
                 return AuthResponse.builder()
                         .userId(existing.getUserId())
@@ -57,7 +57,6 @@ public class AuthService {
                         .name(existing.getName())
                         .role(existing.getRole())
                         .emailVerificationRequired(true)
-                        .otpForDevTesting(sent ? null : otp)
                         .build();
             }
             throw new IllegalArgumentException("Email is already registered and verified");
@@ -80,8 +79,7 @@ public class AuthService {
                 .build();
 
         userRepository.save(user);
-
-        boolean sent = emailService.sendEmailOtp(user.getEmail(), otp);
+        emailService.sendEmailOtp(user.getEmail(), otp);
 
         return AuthResponse.builder()
                 .userId(user.getUserId())
@@ -89,7 +87,6 @@ public class AuthService {
                 .name(user.getName())
                 .role(user.getRole())
                 .emailVerificationRequired(true)
-                .otpForDevTesting(sent ? null : otp)
                 .build();
     }
 
@@ -143,7 +140,7 @@ public class AuthService {
             user.setEmailOtpCode(otp);
             user.setEmailOtpExpiry(LocalDateTime.now().plusMinutes(10));
             userRepository.save(user);
-            boolean sent = emailService.sendEmailOtp(user.getEmail(), otp);
+            emailService.sendEmailOtp(user.getEmail(), otp);
 
             return AuthResponse.builder()
                     .userId(user.getUserId())
@@ -151,7 +148,6 @@ public class AuthService {
                     .name(user.getName())
                     .role(user.getRole())
                     .emailVerificationRequired(true)
-                    .otpForDevTesting(sent ? null : otp)
                     .build();
         }
 
