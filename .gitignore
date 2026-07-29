@@ -1,0 +1,19 @@
+# Maven target directory
+target/
+backend/target/
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+.DS_Store
+
+# Node / React
+node_modules/
+frontend/dist/
+frontend/build/
+frontend/node_modules/
+.env.local
+
+# Logs
+*.log
