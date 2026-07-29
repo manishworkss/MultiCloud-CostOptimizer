@@ -21,7 +21,7 @@ public class EmailService {
         return String.valueOf(code);
     }
 
-    public void sendEmailOtp(String toEmail, String otpCode) {
+    public boolean sendEmailOtp(String toEmail, String otpCode) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom("noreply.costmatrix@gmail.com");
@@ -32,13 +32,15 @@ public class EmailService {
                     "This code will expire in 10 minutes. Please enter it on the registration verification screen to complete your account setup.\n\n" +
                     "Regards,\nCostMatrix Team");
             mailSender.send(message);
+            return true;
         } catch (Exception e) {
-            // Log fallback for local dev when SMTP credentials are default
             System.out.println("=================================================");
-            System.out.println("📧 [CostMatrix Email OTP Dispatch]");
+            System.out.println("📧 [CostMatrix Email OTP Dispatch (Dev Mode)]");
             System.out.println("Target Email: " + toEmail);
             System.out.println("Generated OTP: " + otpCode);
+            System.out.println("Reason: SMTP unconfigured or credentials default. Displaying OTP for testing.");
             System.out.println("=================================================");
+            return false;
         }
     }
 }

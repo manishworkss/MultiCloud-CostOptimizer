@@ -45,12 +45,11 @@ public class AuthService {
         if (userRepository.existsByEmail(request.getEmail())) {
             User existing = userRepository.findByEmail(request.getEmail()).orElse(null);
             if (existing != null && !existing.isEmailVerified()) {
-                // Resend OTP if user registered previously but hasn't verified
                 String otp = emailService.generate6DigitOtp();
                 existing.setEmailOtpCode(otp);
                 existing.setEmailOtpExpiry(LocalDateTime.now().plusMinutes(10));
                 userRepository.save(existing);
-                emailService.sendEmailOtp(existing.getEmail(), otp);
+                boolean sent = emailService.sendEmailOtp(existing.getEmail(), otp);
 
                 return AuthResponse.builder()
                         .userId(existing.getUserId())
@@ -58,6 +57,7 @@ public class AuthService {
                         .name(existing.getName())
                         .role(existing.getRole())
                         .emailVerificationRequired(true)
+                        .otpForDevTesting(sent ? null : otp)
                         .build();
             }
             throw new IllegalArgumentException("Email is already registered and verified");
@@ -81,8 +81,7 @@ public class AuthService {
 
         userRepository.save(user);
 
-        // Send Email OTP
-        emailService.sendEmailOtp(user.getEmail(), otp);
+        boolean sent = emailService.sendEmailOtp(user.getEmail(), otp);
 
         return AuthResponse.builder()
                 .userId(user.getUserId())
@@ -90,6 +89,7 @@ public class AuthService {
                 .name(user.getName())
                 .role(user.getRole())
                 .emailVerificationRequired(true)
+                .otpForDevTesting(sent ? null : otp)
                 .build();
     }
 
@@ -139,12 +139,11 @@ public class AuthService {
         }
 
         if (!user.isEmailVerified()) {
-            // Trigger new Email OTP if trying to login unverified
             String otp = emailService.generate6DigitOtp();
             user.setEmailOtpCode(otp);
             user.setEmailOtpExpiry(LocalDateTime.now().plusMinutes(10));
             userRepository.save(user);
-            emailService.sendEmailOtp(user.getEmail(), otp);
+            boolean sent = emailService.sendEmailOtp(user.getEmail(), otp);
 
             return AuthResponse.builder()
                     .userId(user.getUserId())
@@ -152,6 +151,7 @@ public class AuthService {
                     .name(user.getName())
                     .role(user.getRole())
                     .emailVerificationRequired(true)
+                    .otpForDevTesting(sent ? null : otp)
                     .build();
         }
 

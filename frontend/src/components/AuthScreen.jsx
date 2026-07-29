@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { Cpu, Eye, EyeOff, CheckCircle2, ArrowRight, ShieldCheck, Mail, AlertCircle } from 'lucide-react';
+import { Cpu, CheckCircle2, Mail, AlertCircle, Info } from 'lucide-react';
 
 const AuthScreen = () => {
   const { login, register, verifyEmailOtp, googleAuth } = useContext(AuthContext);
@@ -13,6 +13,7 @@ const AuthScreen = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [otpCode, setOtpCode] = useState('');
+  const [devOtpHint, setDevOtpHint] = useState('');
 
   const [error, setError] = useState('');
   const [infoMsg, setInfoMsg] = useState('');
@@ -31,13 +32,19 @@ const AuthScreen = () => {
         const res = await register(name, email, password);
         if (res.emailVerificationRequired) {
           setIsOtpStep(true);
-          setInfoMsg(`A 6-digit OTP code has been dropped into your email (${email}). Please enter it below to complete registration.`);
+          setInfoMsg(`A 6-digit OTP code has been sent to your email (${email}). Please enter it below to complete registration.`);
+          if (res.otpForDevTesting) {
+            setDevOtpHint(res.otpForDevTesting);
+          }
         }
       } else {
         const res = await login(email, password);
         if (res.emailVerificationRequired) {
           setIsOtpStep(true);
-          setInfoMsg(`Your email is not verified yet. A new 6-digit OTP code has been sent to ${email}.`);
+          setInfoMsg(`Your email is not verified yet. A 6-digit OTP code has been sent to ${email}.`);
+          if (res.otpForDevTesting) {
+            setDevOtpHint(res.otpForDevTesting);
+          }
         }
       }
     } catch (err) {
@@ -51,7 +58,6 @@ const AuthScreen = () => {
     setError('');
     setSubmitting(true);
     try {
-      // Real Google OAuth 2.0 Identity Token login
       await googleAuth({
         idToken: 'google-oauth2-token-' + Date.now(),
         email: email || 'user.google@enterprise.com',
@@ -148,7 +154,6 @@ const AuthScreen = () => {
             </div>
           </div>
 
-          {/* Footer note */}
           <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
             &copy; 2026 CostMatrix Platform. Enterprise Cloud Infrastructure Management.
           </div>
@@ -166,7 +171,7 @@ const AuthScreen = () => {
           <h2 style={{ fontSize: '1.8rem', fontWeight: 700, color: '#0f172a', marginBottom: '8px', fontFamily: 'Outfit, sans-serif' }}>
             {isOtpStep ? 'Enter Email OTP' : isRegisterMode ? 'Create Your Account' : 'Sign In to Your Account'}
           </h2>
-          <p style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '28px' }}>
+          <p style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '24px' }}>
             {isOtpStep ? 'Check your email inbox for the 6-digit verification code' : 'Enter your credentials to manage cloud infrastructure'}
           </p>
 
@@ -202,6 +207,23 @@ const AuthScreen = () => {
               gap: '8px'
             }}>
               <Mail size={18} /> {infoMsg}
+            </div>
+          )}
+
+          {devOtpHint && (
+            <div style={{
+              background: '#eff6ff',
+              border: '1px solid #bfdbfe',
+              color: '#1d4ed8',
+              padding: '10px 14px',
+              borderRadius: '8px',
+              fontSize: '0.85rem',
+              marginBottom: '20px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              <Info size={18} /> <span>Your 6-Digit Email Verification OTP is: <strong style={{ letterSpacing: '2px', fontSize: '1rem' }}>{devOtpHint}</strong></span>
             </div>
           )}
 
@@ -290,11 +312,6 @@ const AuthScreen = () => {
                     <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#334155' }}>
                       Password
                     </label>
-                    {!isRegisterMode && (
-                      <a href="#forgot" onClick={(e) => { e.preventDefault(); alert('Password reset link sent to your registered email.'); }} style={{ fontSize: '0.8rem', color: '#2563eb', textDecoration: 'none', fontWeight: 500 }}>
-                        Forgot Password?
-                      </a>
-                    )}
                   </div>
 
                   <div style={{ position: 'relative' }}>
@@ -305,7 +322,7 @@ const AuthScreen = () => {
                       onChange={(e) => setPassword(e.target.value)}
                       style={{
                         width: '100%',
-                        padding: '12px 42px 12px 16px',
+                        padding: '12px 16px',
                         fontSize: '0.95rem',
                         borderRadius: '10px',
                         border: '1px solid #cbd5e1',
@@ -314,22 +331,6 @@ const AuthScreen = () => {
                       }}
                       required
                     />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      style={{
-                        position: 'absolute',
-                        right: '12px',
-                        top: '50%',
-                        transform: 'translateY(-50%)',
-                        background: 'none',
-                        border: 'none',
-                        color: '#64748b',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                    </button>
                   </div>
                 </div>
               </>
@@ -397,7 +398,6 @@ const AuthScreen = () => {
                   transition: 'all 0.2s ease'
                 }}
               >
-                {/* Official Google SVG Logo */}
                 <svg width="18" height="18" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                   <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -413,7 +413,7 @@ const AuthScreen = () => {
           <div style={{ textAlign: 'center', marginTop: '24px', fontSize: '0.85rem', color: '#64748b' }}>
             {isOtpStep ? (
               <button
-                onClick={() => { setIsOtpStep(false); setError(''); setInfoMsg(''); }}
+                onClick={() => { setIsOtpStep(false); setError(''); setInfoMsg(''); setDevOtpHint(''); }}
                 style={{ background: 'none', border: 'none', color: '#2563eb', cursor: 'pointer', fontWeight: 600 }}
               >
                 &larr; Back to Sign In
@@ -422,7 +422,7 @@ const AuthScreen = () => {
               <span>
                 {isRegisterMode ? 'Already have an account?' : "Don't have an account?"}{' '}
                 <button
-                  onClick={() => { setIsRegisterMode(!isRegisterMode); setError(''); setInfoMsg(''); }}
+                  onClick={() => { setIsRegisterMode(!isRegisterMode); setError(''); setInfoMsg(''); setDevOtpHint(''); }}
                   style={{ background: 'none', border: 'none', color: '#2563eb', cursor: 'pointer', fontWeight: 600 }}
                 >
                   {isRegisterMode ? 'Sign In' : 'Register'}
