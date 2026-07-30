@@ -6,6 +6,10 @@
 [![Database](https://img.shields.io/badge/MySQL-8.0-blue.svg)](https://www.mysql.com/)
 [![Security](https://img.shields.io/badge/Auth-JWT%20%2B%20MFA%20%28TOTP%29-orange.svg)]()
 
+<div align="center">
+  <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&h=400&q=80" alt="CostMatrix Cloud Infrastructure Header" style="border-radius: 12px; margin: 20px 0;" />
+</div>
+
 **CostMatrix** is an enterprise-grade Multi-Cloud FinOps and Infrastructure Placement Platform engineered to eliminate cloud overspending, prevent cloud vendor lock-in, and automate infrastructure cost matching across major cloud service providers: **Amazon Web Services (AWS), Microsoft Azure, Google Cloud Platform (GCP), and Oracle Cloud Infrastructure (OCI)**.
 
 Designed for DevOps teams, FinOps engineers, and enterprise architects, CostMatrix continuously ingests CSP pricing feeds, normalizes complex tariffs, evaluates deployment workloads against SLAs, and delivers actionable infrastructure placement recommendations with automated cost audit reports.
@@ -25,10 +29,15 @@ Designed for DevOps teams, FinOps engineers, and enterprise architects, CostMatr
 - **Weighted Multi-Factor Scoring Engine:** Balances raw cost efficiency ($60\%$), spec-to-instance match exactness ($25\%$), and regional vendor SLA availability ($15\%$).
 - **Circuit Breaker Resilience & Fallback Caching:** Automatic fallback to high-speed Redis/MySQL cached pricing snapshots during vendor API rate-limiting or outages.
 
-### 🎨 Unique Theme & Modern UX/UI System
-- **Titanium Obsidian Dark Theme:** Custom non-generic, high-contrast dark aesthetic engineered specifically for developer workflows (Deep Slate `#090D16`, Titanium Border `#1E293B`, Neon Cyan Accent `#06B6D4`, Emerald Savings Indicator `#10B981`).
-- **Interactive FinOps Dashboard:** Real-time data charts, multi-cloud cost matrix matrices, cost inflation predictors, and provider side-by-side spec visualizers.
+### 🎨 Modern Light Glassmorphism UX/UI
+- **FutureForge Aesthetic:** Custom non-generic, high-contrast light aesthetic engineered specifically for enterprise workflows (Crisp White Canvas `#FFFFFF`, Cyan Glass Borders, Neon Cyan Accent `#06B6D4`, Emerald Savings Indicator `#10B981`).
+- **Interactive FinOps Dashboard:** Real-time data charts, multi-cloud cost matrices, and provider side-by-side spec visualizers.
 - **Executive Report Generation:** One-click automated PDF/CSV export for finance and C-suite audit reporting.
+
+<div align="center">
+  <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1000&q=80" alt="CostMatrix Dashboard Preview" style="border-radius: 12px; margin: 20px 0; box-shadow: 0 10px 25px rgba(0,0,0,0.1);" />
+  <p><em>*Example of Data Analytics & Cloud Cost Dashboard Visualizations</em></p>
+</div>
 
 ---
 
@@ -38,13 +47,17 @@ CostMatrix features a custom-built, modern UI identity that avoids generic templ
 
 | Aesthetic Token | Value / Hex Code | Applied Elements |
 | :--- | :--- | :--- |
-| **Canvas Background** | `#0B0F19` (Obsidian Dark) | Main Application Canvas & Page Containers |
-| **Surface Card** | `#111827` (Deep Titanium Glass) | Dashboard Widgets, Spec Input Forms, Provider Cards |
+| **Canvas Background** | `#F8FAFC` (Slate Light) | Main Application Canvas & Page Containers |
+| **Surface Card** | `#FFFFFF` (White Glass) | Dashboard Widgets, Spec Input Forms, Provider Cards |
 | **Primary Accent** | `#06B6D4` (Electric Cyan) | Primary Buttons, Active Navigation, Key Stat Highlights |
 | **Secondary Accent**| `#8B5CF6` (Vivid Violet) | Recommendation Badges & Provider Comparison Gauges |
 | **Savings Indicator**| `#10B981` (Emerald Green) | Cost Reduction % Metrics & Savings Callouts |
 | **Alert/Warning** | `#F43F5E` (Rose Coral) | Cost Anomaly Alerts & Security/MFA Warnings |
-| **Typography** | `Outfit`, `Inter`, `JetBrains Mono` | Clean geometric headers, crisp body text, monospace code specs |
+| **Typography** | `Outfit`, `Inter` | Clean geometric headers, crisp body text |
+
+<div align="center">
+  <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&h=300&q=80" alt="Cloud Data Center" style="border-radius: 12px; margin: 30px 0;" />
+</div>
 
 ---
 
