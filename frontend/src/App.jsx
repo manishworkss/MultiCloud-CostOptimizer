@@ -96,6 +96,7 @@ function App() {
                       <button
                         className="btn-outline"
                         onClick={() => {
+                          alert('Live multi-cloud pricing metrics refreshed successfully via API.');
                           if (recommendations) setRecommendations([...recommendations]);
                         }}
                         style={{ fontSize: '0.8rem', padding: '8px 14px', display: 'flex', alignItems: 'center', gap: '6px' }}

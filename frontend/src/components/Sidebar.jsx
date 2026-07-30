@@ -13,7 +13,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
     <aside style={{
       width: '240px',
       background: 'var(--bg-canvas)',
-      borderRight: '1px solid rgba(255, 255, 255, 0.08)',
+      borderRight: '1px solid var(--border-color)',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',

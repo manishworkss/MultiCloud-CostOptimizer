@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { Cpu, HardDrive, Database, Globe, Sliders, Play } from 'lucide-react';
+import { Cpu, HardDrive, Database, Globe, Sliders, Play, FileText, Layers, Monitor } from 'lucide-react';
 
 const DeploymentSpecForm = ({ onSubmitSpec, loading }) => {
+  const [projectName, setProjectName] = useState('');
+  const [environment, setEnvironment] = useState('Production');
+  const [operatingSystem, setOperatingSystem] = useState('Linux');
   const [vcpu, setVcpu] = useState(4);
   const [ramGb, setRamGb] = useState(16);
   const [storageGb, setStorageGb] = useState(200);
@@ -12,10 +15,12 @@ const DeploymentSpecForm = ({ onSubmitSpec, loading }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmitSpec({
+      projectName: projectName || 'Untitled Project',
+      environment: environment,
+      operatingSystem: operatingSystem,
       cpu: `${vcpu} vCPU`,
       ram: `${ramGb} GB`,
       storage: `${storageGb} GB`,
-      operatingSystem: 'Linux',
       databaseType: databaseEngine,
       bandwidth: `${bandwidthGb} GB`,
       region: targetRegion,
@@ -35,7 +40,47 @@ const DeploymentSpecForm = ({ onSubmitSpec, loading }) => {
           </div>
         </div>
 
-        <form id="spec-form" onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+        <form id="spec-form" onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px', maxHeight: '500px', overflowY: 'auto', paddingRight: '8px' }}>
+          
+          {/* Project Name */}
+          <div>
+            <label style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <FileText size={14} color="#f43f5e" /> Project Name
+            </label>
+            <input 
+              type="text" 
+              className="form-control" 
+              placeholder="e.g. Data Analytics Pipeline"
+              value={projectName} 
+              onChange={(e) => setProjectName(e.target.value)} 
+              style={{ padding: '9px 12px', fontSize: '0.85rem', width: '100%', boxSizing: 'border-box' }}
+              required
+            />
+          </div>
+
+          {/* Environment */}
+          <div>
+            <label style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Layers size={14} color="#8b5cf6" /> Environment Phase
+            </label>
+            <select className="form-control" value={environment} onChange={(e) => setEnvironment(e.target.value)} style={{ padding: '9px 12px', fontSize: '0.85rem' }}>
+              <option value="Production">Production (High Availability)</option>
+              <option value="Staging">Staging / Pre-prod</option>
+              <option value="Development">Development & Testing</option>
+            </select>
+          </div>
+
+          {/* Operating System */}
+          <div>
+            <label style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Monitor size={14} color="#06b6d4" /> Operating System
+            </label>
+            <select className="form-control" value={operatingSystem} onChange={(e) => setOperatingSystem(e.target.value)} style={{ padding: '9px 12px', fontSize: '0.85rem' }}>
+              <option value="Linux">Linux (Ubuntu / Amazon Linux)</option>
+              <option value="Windows">Windows Server (Requires License)</option>
+            </select>
+          </div>
+
           {/* vCPU Cores */}
           <div>
             <label style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
