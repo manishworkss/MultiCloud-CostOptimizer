@@ -19,8 +19,8 @@ const KpiMetrics = ({ recommendations }) => {
           <Award size={24} />
         </div>
         <div>
-          <div style={{ fontSize: '0.75rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 600 }}>Top Recommendation</div>
-          <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#f8fafc', marginTop: '2px', fontFamily: 'Outfit, sans-serif' }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 600 }}>Top Recommendation</div>
+          <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', marginTop: '2px', fontFamily: 'Outfit, sans-serif' }}>
             {winner ? `${winner.providerName}` : 'AWS EC2 / Azure'}
           </div>
           <div style={{ fontSize: '0.75rem', color: '#06b6d4', fontWeight: 600 }}>
@@ -35,12 +35,12 @@ const KpiMetrics = ({ recommendations }) => {
           <DollarSign size={24} />
         </div>
         <div>
-          <div style={{ fontSize: '0.75rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 600 }}>Optimal Monthly TCO</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 600 }}>Optimal Monthly TCO</div>
           <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#10b981', marginTop: '2px', fontFamily: 'Outfit, sans-serif' }}>
-            ${monthlyCost} <span style={{ fontSize: '0.75rem', color: '#64748b' }}>/mo</span>
+            ₹{monthlyCost} <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>/mo</span>
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
-            Max Market Rate: ${maxMonthly}
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+            Max Market Rate: ₹{maxMonthly}
           </div>
         </div>
       </div>
@@ -51,9 +51,9 @@ const KpiMetrics = ({ recommendations }) => {
           <TrendingDown size={24} />
         </div>
         <div>
-          <div style={{ fontSize: '0.75rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 600 }}>Projected Annual Savings</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 600 }}>Projected Annual Savings</div>
           <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#8b5cf6', marginTop: '2px', fontFamily: 'Outfit, sans-serif' }}>
-            ${totalSavings}
+            ₹{totalSavings}
           </div>
           <div style={{ fontSize: '0.75rem', color: '#10b981', fontWeight: 600 }}>
             vs Highest Tier CSP
@@ -67,8 +67,8 @@ const KpiMetrics = ({ recommendations }) => {
           <Server size={24} />
         </div>
         <div>
-          <div style={{ fontSize: '0.75rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 600 }}>Evaluated Cloud Vendors</div>
-          <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#f8fafc', marginTop: '2px', fontFamily: 'Outfit, sans-serif' }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 600 }}>Evaluated Cloud Vendors</div>
+          <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', marginTop: '2px', fontFamily: 'Outfit, sans-serif' }}>
             4 Major CSPs
           </div>
           <div style={{ fontSize: '0.75rem', color: '#3b82f6', fontWeight: 600 }}>

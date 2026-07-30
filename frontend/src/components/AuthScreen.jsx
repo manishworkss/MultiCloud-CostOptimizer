@@ -125,9 +125,50 @@ const AuthScreenContent = () => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: '#070a12',
-      padding: '24px'
+      background: 'var(--bg-canvas)',
+      padding: '24px',
+      position: 'relative',
+      overflow: 'hidden'
     }}>
+      <style>
+        {`
+          @keyframes float1 {
+            0% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0, 0) scale(1); }
+          }
+          @keyframes float2 {
+            0% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(-50px, 30px) scale(1.2); }
+            66% { transform: translate(20px, -20px) scale(0.8); }
+            100% { transform: translate(0, 0) scale(1); }
+          }
+          @keyframes float3 {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, 30px) scale(1.1); }
+            100% { transform: translate(0, 0) scale(1); }
+          }
+        `}
+      </style>
+
+      {/* Animated Floating Orbs */}
+      <div style={{
+        position: 'absolute', top: '-10%', left: '-10%', width: '40vw', height: '40vw',
+        background: 'rgba(6, 182, 212, 0.15)', borderRadius: '50%', filter: 'blur(80px)',
+        animation: 'float1 15s ease-in-out infinite', zIndex: 0
+      }} />
+      <div style={{
+        position: 'absolute', bottom: '-10%', right: '-5%', width: '45vw', height: '45vw',
+        background: 'rgba(59, 130, 246, 0.12)', borderRadius: '50%', filter: 'blur(100px)',
+        animation: 'float2 18s ease-in-out infinite', zIndex: 0
+      }} />
+      <div style={{
+        position: 'absolute', top: '20%', right: '15%', width: '30vw', height: '30vw',
+        background: 'rgba(139, 92, 246, 0.1)', borderRadius: '50%', filter: 'blur(90px)',
+        animation: 'float3 12s ease-in-out infinite', zIndex: 0
+      }} />
+
       <div style={{
         width: '100%',
         maxWidth: '1040px',
@@ -138,18 +179,20 @@ const AuthScreenContent = () => {
         display: 'grid',
         gridTemplateColumns: '1fr 1fr',
         border: '1px solid rgba(255, 255, 255, 0.08)',
-        background: '#ffffff'
+        background: '#ffffff',
+        position: 'relative',
+        zIndex: 1
       }}>
         
         {/* LEFT PANEL */}
         <div style={{
-          background: 'linear-gradient(135deg, #090d16 0%, #111827 50%, #1e1b4b 100%)',
+          background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)',
           padding: '48px 40px',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
           position: 'relative',
-          color: '#ffffff'
+          color: 'var(--text-primary)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div style={{
@@ -168,7 +211,7 @@ const AuthScreenContent = () => {
               <h2 style={{ fontSize: '1.4rem', fontFamily: 'Outfit, sans-serif', letterSpacing: '0.5px' }}>
                 Cost<span style={{ color: '#06b6d4' }}>Matrix</span>
               </h2>
-              <p style={{ fontSize: '0.7rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px' }}>
+              <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1.2px' }}>
                 FinOps Placement Engine
               </p>
             </div>
@@ -178,27 +221,27 @@ const AuthScreenContent = () => {
             <h1 style={{ fontSize: '2.4rem', fontWeight: 800, marginBottom: '16px', lineHeight: '1.2' }}>
               {isOtpStep ? 'Verify Email' : isRegisterMode ? 'Get Started' : 'Welcome Back'}
             </h1>
-            <p style={{ color: '#94a3b8', fontSize: '0.95rem', lineHeight: '1.6', marginBottom: '28px' }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: '1.6', marginBottom: '28px' }}>
               Access your multi-cloud optimization platform. Streamline your infrastructure placement and control cloud costs with CostMatrix.
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.88rem', color: '#cbd5e1' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
                 <CheckCircle2 size={18} color="#06b6d4" />
                 <span>Live AWS, Azure, GCP &amp; OCI price ingestion</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.88rem', color: '#cbd5e1' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
                 <CheckCircle2 size={18} color="#10b981" />
                 <span>Email OTP verification &amp; Google OAuth 2.0</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.88rem', color: '#cbd5e1' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
                 <CheckCircle2 size={18} color="#8b5cf6" />
                 <span>Weighted TCO &amp; SLA Uptime Recommendation Score</span>
               </div>
             </div>
           </div>
 
-          <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
             &copy; 2026 CostMatrix Platform. Enterprise Cloud Infrastructure Management.
           </div>
         </div>
@@ -215,7 +258,7 @@ const AuthScreenContent = () => {
           <h2 style={{ fontSize: '1.8rem', fontWeight: 700, color: '#0f172a', marginBottom: '8px', fontFamily: 'Outfit, sans-serif' }}>
             {isOtpStep ? 'Enter Email OTP' : isRegisterMode ? 'Create Your Account' : 'Sign In to Your Account'}
           </h2>
-          <p style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '24px' }}>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '24px' }}>
             {isOtpStep ? 'Check your email inbox for the 6-digit verification code' : 'Enter your credentials to manage cloud infrastructure'}
           </p>
 
@@ -256,7 +299,7 @@ const AuthScreenContent = () => {
           <form onSubmit={handleSubmit}>
             {isOtpStep ? (
               <div style={{ marginBottom: '20px' }}>
-                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#334155', marginBottom: '6px' }}>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: 'var(--border-glow)', marginBottom: '6px' }}>
                   6-Digit Verification OTP Code
                 </label>
                 <input
@@ -286,7 +329,7 @@ const AuthScreenContent = () => {
               <>
                 {isRegisterMode && (
                   <div style={{ marginBottom: '18px' }}>
-                    <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#334155', marginBottom: '6px' }}>
+                    <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: 'var(--border-glow)', marginBottom: '6px' }}>
                       Full Name
                     </label>
                     <input
@@ -309,7 +352,7 @@ const AuthScreenContent = () => {
                 )}
 
                 <div style={{ marginBottom: '18px' }}>
-                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#334155', marginBottom: '6px' }}>
+                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: 'var(--border-glow)', marginBottom: '6px' }}>
                     Email Address
                   </label>
                   <input
@@ -332,7 +375,7 @@ const AuthScreenContent = () => {
 
                 <div style={{ marginBottom: '24px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                    <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#334155' }}>
+                    <label style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--border-glow)' }}>
                       Password
                     </label>
                   </div>
@@ -393,7 +436,7 @@ const AuthScreenContent = () => {
             <>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: '24px 0' }}>
                 <div style={{ flex: 1, height: '1px', background: '#e2e8f0' }}></div>
-                <span style={{ fontSize: '0.8rem', color: '#94a3b8', fontWeight: 500 }}>or</span>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 500 }}>or</span>
                 <div style={{ flex: 1, height: '1px', background: '#e2e8f0' }}></div>
               </div>
 
@@ -404,7 +447,7 @@ const AuthScreenContent = () => {
             </>
           )}
 
-          <div style={{ textAlign: 'center', marginTop: '24px', fontSize: '0.85rem', color: '#64748b' }}>
+          <div style={{ textAlign: 'center', marginTop: '24px', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
             {isOtpStep ? (
               <button
                 onClick={() => { setIsOtpStep(false); setError(''); setInfoMsg(''); }}

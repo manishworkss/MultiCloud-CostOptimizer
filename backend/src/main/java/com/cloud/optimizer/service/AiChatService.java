@@ -23,10 +23,10 @@ public class AiChatService {
     
     private final RestTemplate restTemplate;
 
-    @Value("${app.ai.gemini.api-key:}")
-    private String geminiApiKey;
+    @Value("${app.ai.groq.api-key:}")
+    private String groqApiKey;
 
-    private static final String GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=";
+    private static final String GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 
     private static final String SYSTEM_PROMPT = 
         "You are CostMatrix-AI, an expert FinOps assistant and Help Desk agent for the Multi-Cloud Cost Optimizer platform. " +
@@ -40,54 +40,55 @@ public class AiChatService {
     }
 
     public String getChatResponse(String userMessage) {
-        if (geminiApiKey == null || geminiApiKey.isEmpty()) {
-            logger.warn("Gemini API Key is not configured. Falling back to mock response.");
-            return "Warning: The AI Help Desk is currently unconfigured. Please provide a GEMINI_API_KEY to the backend to enable live AI responses. (Mock response to: '" + userMessage + "')";
+        if (groqApiKey == null || groqApiKey.isEmpty()) {
+            logger.warn("Groq API Key is not configured. Falling back to mock response.");
+            return "Warning: The AI Help Desk is currently unconfigured. Please provide a GROQ_API_KEY to the backend to enable live AI responses. (Mock response to: '" + userMessage + "')";
         }
 
         try {
-            String url = GEMINI_API_URL + geminiApiKey;
-
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setBearerAuth(groqApiKey);
 
-            // Constructing the Gemini API payload using Maps
+            // Constructing the Groq/OpenAI API payload
             Map<String, Object> requestBody = new HashMap<>();
+            requestBody.put("model", "llama-3.1-8b-instant");
 
+            List<Map<String, String>> messages = new ArrayList<>();
+            
             // 1. System Instruction
-            Map<String, Object> systemInstruction = new HashMap<>();
-            Map<String, Object> systemParts = new HashMap<>();
-            systemParts.put("text", SYSTEM_PROMPT);
-            systemInstruction.put("parts", systemParts);
-            requestBody.put("system_instruction", systemInstruction);
+            Map<String, String> systemMessage = new HashMap<>();
+            systemMessage.put("role", "system");
+            systemMessage.put("content", SYSTEM_PROMPT);
+            messages.add(systemMessage);
 
             // 2. User Message Content
-            Map<String, Object> content = new HashMap<>();
-            Map<String, Object> userParts = new HashMap<>();
-            userParts.put("text", userMessage);
-            content.put("parts", List.of(userParts));
-            requestBody.put("contents", List.of(content));
+            Map<String, String> userMsg = new HashMap<>();
+            userMsg.put("role", "user");
+            userMsg.put("content", userMessage);
+            messages.add(userMsg);
+            
+            requestBody.put("messages", messages);
 
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
 
-            ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.POST, entity, Map.class);
+            ResponseEntity<Map> response = restTemplate.exchange(GROQ_API_URL, HttpMethod.POST, entity, Map.class);
             Map<String, Object> responseBody = response.getBody();
 
-            if (responseBody != null && responseBody.containsKey("candidates")) {
-                List<Map<String, Object>> candidates = (List<Map<String, Object>>) responseBody.get("candidates");
-                if (!candidates.isEmpty()) {
-                    Map<String, Object> candidate = candidates.get(0);
-                    Map<String, Object> contentMap = (Map<String, Object>) candidate.get("content");
-                    List<Map<String, Object>> parts = (List<Map<String, Object>>) contentMap.get("parts");
-                    if (!parts.isEmpty()) {
-                        return (String) parts.get(0).get("text");
+            if (responseBody != null && responseBody.containsKey("choices")) {
+                List<Map<String, Object>> choices = (List<Map<String, Object>>) responseBody.get("choices");
+                if (!choices.isEmpty()) {
+                    Map<String, Object> choice = choices.get(0);
+                    Map<String, Object> message = (Map<String, Object>) choice.get("message");
+                    if (message != null && message.containsKey("content")) {
+                        return (String) message.get("content");
                     }
                 }
             }
             return "I'm sorry, I couldn't generate a response at this time.";
 
         } catch (Exception e) {
-            logger.error("Error communicating with Gemini API", e);
+            logger.error("Error communicating with Groq API", e);
             return "An error occurred while trying to reach the AI service. Please try again later.";
         }
     }

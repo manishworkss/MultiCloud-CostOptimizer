@@ -13,8 +13,8 @@ const PROVIDER_COLORS = {
 const CostComparisonDashboard = ({ recommendations, requestId }) => {
   if (!recommendations || recommendations.length === 0) {
     return (
-      <div className="glass-panel" style={{ padding: '48px', textAlign: 'center', color: '#64748b' }}>
-        <h3 style={{ fontSize: '1.2rem', color: '#94a3b8', marginBottom: '8px' }}>Placement Engine Ready</h3>
+      <div className="glass-panel" style={{ padding: '48px', textAlign: 'center', color: 'var(--text-muted)' }}>
+        <h3 style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginBottom: '8px' }}>Placement Engine Ready</h3>
         <p style={{ fontSize: '0.85rem' }}>Select your hardware &amp; regional requirements on the left and click <strong>Run Placement Engine</strong> to calculate live multi-cloud cost benchmarks.</p>
       </div>
     );
@@ -77,10 +77,10 @@ const CostComparisonDashboard = ({ recommendations, requestId }) => {
             <div className="badge badge-emerald" style={{ marginBottom: '4px', fontSize: '0.72rem', display: 'inline-block' }}>
               #1 Optimal Placement Recommendation
             </div>
-            <h2 style={{ fontSize: '1.3rem', color: '#f8fafc' }}>
+            <h2 style={{ fontSize: '1.3rem', color: 'var(--text-primary)' }}>
               {winner.providerName} ({winner.serviceName})
             </h2>
-            <p style={{ color: '#94a3b8', fontSize: '0.82rem', margin: 0 }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', margin: 0 }}>
               Recommendation Score: <strong style={{ color: '#10b981' }}>{winner.recommendationScore} / 100</strong> | Region SLA Uptime: <strong>{winner.regionSlaUptime}%</strong>
             </p>
           </div>
@@ -88,12 +88,12 @@ const CostComparisonDashboard = ({ recommendations, requestId }) => {
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
           <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Projected Monthly TCO</div>
+            <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Projected Monthly TCO</div>
             <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#10b981', fontFamily: 'Outfit, sans-serif' }}>
-              ${winner.totalMonthlyCost} <span style={{ fontSize: '0.8rem', color: '#64748b' }}>/ mo</span>
+              ₹{winner.totalMonthlyCost} <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>/ mo</span>
             </div>
             <div style={{ fontSize: '0.8rem', color: '#06b6d4', fontWeight: 600 }}>
-              Est. Annual Savings: ${totalAnnualSavings}
+              Est. Annual Savings: ₹{totalAnnualSavings}
             </div>
           </div>
 
@@ -111,18 +111,18 @@ const CostComparisonDashboard = ({ recommendations, requestId }) => {
       {/* Bar Chart Section */}
       <div className="glass-panel" style={{ padding: '20px' }}>
         <div style={{ marginBottom: '14px' }}>
-          <h3 style={{ fontSize: '1.05rem', color: '#f8fafc', margin: 0 }}>Multi-Cloud Monthly TCO Comparison</h3>
-          <p style={{ fontSize: '0.78rem', color: '#94a3b8', margin: '2px 0 0 0' }}>Real-time calculated tariffs (Compute + Storage + Database + Bandwidth)</p>
+          <h3 style={{ fontSize: '1.05rem', color: 'var(--text-primary)', margin: 0 }}>Multi-Cloud Monthly TCO Comparison</h3>
+          <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', margin: '2px 0 0 0' }}>Real-time calculated tariffs (Compute + Storage + Database + Bandwidth)</p>
         </div>
 
         <div style={{ width: '100%', height: 220 }}>
           <ResponsiveContainer>
             <BarChart data={chartData} margin={{ top: 15, right: 20, left: 10, bottom: 5 }}>
-              <XAxis dataKey="name" stroke="#64748b" tick={{ fill: '#94a3b8', fontSize: 12 }} />
-              <YAxis stroke="#64748b" tick={{ fill: '#94a3b8', fontSize: 12 }} unit="$" />
+              <XAxis dataKey="name" stroke="#64748b" tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} />
+              <YAxis stroke="#64748b" tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} unit="₹" />
               <Tooltip
-                contentStyle={{ background: '#111827', borderColor: '#1e293b', borderRadius: '8px', color: '#f8fafc' }}
-                formatter={(value) => [`$${value}`, 'Monthly Cost']}
+                contentStyle={{ background: 'var(--bg-surface)', borderColor: 'var(--border-color)', borderRadius: '8px', color: 'var(--text-primary)' }}
+                formatter={(value) => [`₹${value}`, 'Monthly Cost']}
               />
               <Bar dataKey="monthlyCost" radius={[6, 6, 0, 0]}>
                 {chartData.map((entry, index) => (
@@ -157,18 +157,18 @@ const CostComparisonDashboard = ({ recommendations, requestId }) => {
                 <span className="badge badge-cyan" style={{ fontSize: '0.7rem' }}>{rec.recommendationScore} Score</span>
               </div>
 
-              <h4 style={{ fontSize: '0.95rem', margin: '4px 0 10px 0', color: '#f8fafc' }}>{rec.providerName}</h4>
-              <div style={{ fontSize: '1.3rem', fontWeight: 700, color: '#f8fafc', marginBottom: '8px', fontFamily: 'Outfit, sans-serif' }}>
-                ${rec.totalMonthlyCost} <span style={{ fontSize: '0.75rem', color: '#64748b' }}>/ mo</span>
+              <h4 style={{ fontSize: '0.95rem', margin: '4px 0 10px 0', color: 'var(--text-primary)' }}>{rec.providerName}</h4>
+              <div style={{ fontSize: '1.3rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px', fontFamily: 'Outfit, sans-serif' }}>
+                ₹{rec.totalMonthlyCost} <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>/ mo</span>
               </div>
             </div>
 
-            <div style={{ fontSize: '0.78rem', color: '#94a3b8', borderTop: '1px solid rgba(255, 255, 255, 0.05)', paddingTop: '10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', borderTop: '1px solid rgba(255, 255, 255, 0.05)', paddingTop: '10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>Yearly:</span> <strong style={{ color: '#cbd5e1' }}>${rec.totalYearlyCost}</strong>
+                <span>Yearly:</span> <strong style={{ color: 'var(--text-secondary)' }}>₹{rec.totalYearlyCost}</strong>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>Est. Savings:</span> <strong style={{ color: '#10b981' }}>${rec.estimatedSavings}</strong>
+                <span>Est. Savings:</span> <strong style={{ color: '#10b981' }}>₹{rec.estimatedSavings}</strong>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span>SLA Uptime:</span> <strong style={{ color: '#3b82f6' }}>{rec.regionSlaUptime}%</strong>

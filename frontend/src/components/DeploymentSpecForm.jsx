@@ -30,15 +30,15 @@ const DeploymentSpecForm = ({ onSubmitSpec, loading }) => {
             <Sliders size={20} />
           </div>
           <div>
-            <h3 style={{ fontSize: '1.05rem', color: '#f8fafc', margin: 0 }}>Workload Configurator</h3>
-            <p style={{ fontSize: '0.75rem', color: '#94a3b8', margin: 0 }}>Configure target compute, storage &amp; region</p>
+            <h3 style={{ fontSize: '1.05rem', color: 'var(--text-primary)', margin: 0 }}>Workload Configurator</h3>
+            <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: 0 }}>Configure target compute, storage &amp; region</p>
           </div>
         </div>
 
         <form id="spec-form" onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
           {/* vCPU Cores */}
           <div>
-            <label style={{ fontSize: '0.78rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <label style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Cpu size={14} color="#06b6d4" /> vCPU Compute Cores
             </label>
             <select className="form-control" value={vcpu} onChange={(e) => setVcpu(e.target.value)} style={{ padding: '9px 12px', fontSize: '0.85rem' }}>
@@ -52,7 +52,7 @@ const DeploymentSpecForm = ({ onSubmitSpec, loading }) => {
 
           {/* RAM Memory */}
           <div>
-            <label style={{ fontSize: '0.78rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <label style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Cpu size={14} color="#3b82f6" /> RAM Memory Capacity
             </label>
             <select className="form-control" value={ramGb} onChange={(e) => setRamGb(e.target.value)} style={{ padding: '9px 12px', fontSize: '0.85rem' }}>
@@ -67,7 +67,7 @@ const DeploymentSpecForm = ({ onSubmitSpec, loading }) => {
 
           {/* Storage Volume */}
           <div>
-            <label style={{ fontSize: '0.78rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <label style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <HardDrive size={14} color="#10b981" /> SSD Storage Disk
             </label>
             <select className="form-control" value={storageGb} onChange={(e) => setStorageGb(e.target.value)} style={{ padding: '9px 12px', fontSize: '0.85rem' }}>
@@ -81,7 +81,7 @@ const DeploymentSpecForm = ({ onSubmitSpec, loading }) => {
 
           {/* Database Engine */}
           <div>
-            <label style={{ fontSize: '0.78rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <label style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Database size={14} color="#8b5cf6" /> Managed Database Engine
             </label>
             <select className="form-control" value={databaseEngine} onChange={(e) => setDatabaseEngine(e.target.value)} style={{ padding: '9px 12px', fontSize: '0.85rem' }}>
@@ -94,7 +94,7 @@ const DeploymentSpecForm = ({ onSubmitSpec, loading }) => {
 
           {/* Bandwidth Traffic */}
           <div>
-            <label style={{ fontSize: '0.78rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <label style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Globe size={14} color="#f59e0b" /> Egress Bandwidth Traffic
             </label>
             <select className="form-control" value={bandwidthGb} onChange={(e) => setBandwidthGb(e.target.value)} style={{ padding: '9px 12px', fontSize: '0.85rem' }}>
@@ -107,7 +107,7 @@ const DeploymentSpecForm = ({ onSubmitSpec, loading }) => {
 
           {/* Deployment Region */}
           <div>
-            <label style={{ fontSize: '0.78rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <label style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Globe size={14} color="#ec4899" /> Target Deployment Region
             </label>
             <select className="form-control" value={targetRegion} onChange={(e) => setTargetRegion(e.target.value)} style={{ padding: '9px 12px', fontSize: '0.85rem' }}>

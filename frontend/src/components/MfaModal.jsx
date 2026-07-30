@@ -47,7 +47,7 @@ const MfaModal = ({ isOpen, onClose, isSetupMode = false }) => {
     <div style={{
       position: 'fixed',
       inset: 0,
-      background: 'rgba(9, 13, 22, 0.85)',
+      background: 'rgba(255, 255, 255, 0.85)',
       backdropFilter: 'blur(8px)',
       display: 'flex',
       alignItems: 'center',
@@ -61,7 +61,7 @@ const MfaModal = ({ isOpen, onClose, isSetupMode = false }) => {
             <h3 style={{ fontSize: '1.25rem' }}>
               {isSetupMode ? 'Configure 2-Factor Authentication' : '2FA Verification Required'}
             </h3>
-            <p style={{ fontSize: '0.8rem', color: '#94a3b8' }}>
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
               Google Authenticator / Authy TOTP
             </p>
           </div>
@@ -96,7 +96,7 @@ const MfaModal = ({ isOpen, onClose, isSetupMode = false }) => {
               <QRCodeSVG value={setupData.qrCodeUrl} size={180} />
             </div>
 
-            <div style={{ background: '#0b0f19', padding: '10px', borderRadius: '6px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid #1e293b' }}>
+            <div style={{ background: 'var(--bg-canvas)', padding: '10px', borderRadius: '6px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid #1e293b' }}>
               <span className="mono" style={{ color: '#06b6d4', fontWeight: 600 }}>{setupData.secretKey}</span>
               <button onClick={copySecret} className="btn-outline" style={{ padding: '4px 8px', fontSize: '0.75rem' }}>
                 {copied ? <Check size={14} color="#10b981" /> : <Copy size={14} />}

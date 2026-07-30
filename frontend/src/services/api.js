@@ -23,9 +23,11 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && error.response.status === 401) {
-      // Clear token on 401
+    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+      // Clear token on 401/403 (expired or invalid token)
       localStorage.removeItem('accessToken');
+      localStorage.removeItem('userData'); // Ensure userData is also cleared
+      window.location.reload(); // Force app to re-render AuthScreen
     }
     return Promise.reject(error);
   }

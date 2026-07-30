@@ -9,6 +9,7 @@ import DeploymentSpecForm from './components/DeploymentSpecForm';
 import CostComparisonDashboard from './components/CostComparisonDashboard';
 import CloudTariffsDashboard from './components/CloudTariffsDashboard';
 import AuditReportsDashboard from './components/AuditReportsDashboard';
+import AboutProjectDashboard from './components/AboutProjectDashboard';
 import AiChatWidget from './components/AiChatWidget';
 import api from './services/api';
 import { Activity, LayoutDashboard, RefreshCw } from 'lucide-react';
@@ -16,7 +17,7 @@ import { Activity, LayoutDashboard, RefreshCw } from 'lucide-react';
 function App() {
   const { user, loading, mfaRequired } = useContext(AuthContext);
 
-  const [activeTab, setActiveTab] = useState('placement');
+  const [activeTab, setActiveTab] = useState('about');
   const [isMfaModalOpen, setIsMfaModalOpen] = useState(false);
   const [isMfaSetupMode, setIsMfaSetupMode] = useState(false);
 
@@ -63,7 +64,7 @@ function App() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#070a12', color: '#f8fafc' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--bg-canvas)', color: 'var(--text-primary)' }}>
       {user ? (
         /* Logged-In Professional Enterprise FinOps Dashboard */
         <>
@@ -77,14 +78,16 @@ function App() {
             <main style={{ flex: 1, padding: '28px 36px', overflowY: 'auto' }}>
               
               {/* Dynamic Content Viewport */}
+              {activeTab === 'about' && <AboutProjectDashboard />}
+
               {activeTab === 'placement' && (
                 <>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
                     <div>
-                      <h1 style={{ fontSize: '1.6rem', margin: 0, fontFamily: 'Outfit, sans-serif', color: '#f8fafc' }}>
+                      <h1 style={{ fontSize: '1.6rem', margin: 0, fontFamily: 'Outfit, sans-serif', color: 'var(--text-primary)' }}>
                         Multi-Cloud Infrastructure Placement Engine
                       </h1>
-                      <p style={{ color: '#94a3b8', fontSize: '0.85rem', margin: '4px 0 0 0' }}>
+                      <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', margin: '4px 0 0 0' }}>
                         Benchmark real-time tariffs across AWS, Azure, GCP, and OCI for workload placement optimization.
                       </p>
                     </div>

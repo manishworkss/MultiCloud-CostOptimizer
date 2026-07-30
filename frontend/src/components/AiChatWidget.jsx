@@ -32,10 +32,12 @@ const AiChatWidget = () => {
     setLoading(true);
 
     try {
-      const response = await api.post('/api/chat', { message: userMsg });
+      const response = await api.post('/chat', { message: userMsg });
       setMessages(prev => [...prev, { sender: 'bot', text: response.data.response }]);
     } catch (error) {
-      setMessages(prev => [...prev, { sender: 'bot', text: 'Sorry, I encountered an error connecting to the AI brain.' }]);
+      console.error('Chat API Error:', error);
+      const errMsg = error.response ? `API Error: ${error.response.status} - ${error.response.data.message || error.response.statusText}` : `Network Error: ${error.message}`;
+      setMessages(prev => [...prev, { sender: 'bot', text: `Sorry, I encountered an error connecting to the AI brain. Details: ${errMsg}` }]);
     } finally {
       setLoading(false);
     }
@@ -77,7 +79,7 @@ const AiChatWidget = () => {
         <div style={{
           width: '380px',
           height: '550px',
-          background: 'rgba(15, 23, 42, 0.95)',
+          background: 'var(--bg-glass)',
           backdropFilter: 'blur(16px)',
           border: '1px solid rgba(255,255,255,0.1)',
           borderRadius: '16px',
@@ -88,7 +90,7 @@ const AiChatWidget = () => {
         }}>
           {/* Chat Header */}
           <div style={{
-            background: 'rgba(255,255,255,0.05)',
+            background: 'var(--border-color)',
             padding: '16px',
             display: 'flex',
             alignItems: 'center',
@@ -100,14 +102,14 @@ const AiChatWidget = () => {
                 <Bot size={20} />
               </div>
               <div>
-                <h3 style={{ margin: 0, fontSize: '1rem', color: '#f8fafc' }}>CostMatrix AI</h3>
+                <h3 style={{ margin: 0, fontSize: '1rem', color: 'var(--text-primary)' }}>CostMatrix AI</h3>
                 <span style={{ fontSize: '0.75rem', color: '#10b981', display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <span style={{ display: 'inline-block', width: '6px', height: '6px', background: '#10b981', borderRadius: '50%' }}></span>
                   FinOps Expert Online
                 </span>
               </div>
             </div>
-            <button onClick={toggleChat} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: '4px' }}>
+            <button onClick={toggleChat} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '4px' }}>
               <X size={20} />
             </button>
           </div>
@@ -123,14 +125,14 @@ const AiChatWidget = () => {
                 maxWidth: '85%'
               }}>
                 {msg.sender === 'bot' && (
-                  <div style={{ background: 'rgba(255,255,255,0.1)', padding: '6px', borderRadius: '50%', color: '#3b82f6' }}>
+                  <div style={{ background: 'var(--border-color)', padding: '6px', borderRadius: '50%', color: '#3b82f6' }}>
                     <Bot size={14} />
                   </div>
                 )}
                 
                 <div style={{
-                  background: msg.sender === 'user' ? '#3b82f6' : 'rgba(255,255,255,0.08)',
-                  color: '#f8fafc',
+                  background: msg.sender === 'user' ? '#3b82f6' : 'var(--border-color)',
+                  color: 'var(--text-primary)',
                   padding: '12px 16px',
                   borderRadius: '16px',
                   borderBottomRightRadius: msg.sender === 'user' ? '4px' : '16px',
@@ -144,7 +146,7 @@ const AiChatWidget = () => {
             ))}
             
             {loading && (
-              <div style={{ display: 'flex', gap: '8px', alignItems: 'center', color: '#94a3b8', fontSize: '0.85rem' }}>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
                 <Loader2 size={14} className="spin" /> AI is thinking...
               </div>
             )}
@@ -155,7 +157,7 @@ const AiChatWidget = () => {
           <form onSubmit={sendMessage} style={{
             padding: '16px',
             borderTop: '1px solid rgba(255,255,255,0.1)',
-            background: 'rgba(0,0,0,0.2)',
+            background: 'rgba(0, 0, 0, 0.05)',
             display: 'flex',
             gap: '8px'
           }}>
@@ -166,11 +168,11 @@ const AiChatWidget = () => {
               placeholder="Ask about cloud pricing..." 
               style={{
                 flex: 1,
-                background: 'rgba(255,255,255,0.05)',
+                background: 'var(--border-color)',
                 border: '1px solid rgba(255,255,255,0.1)',
                 borderRadius: '24px',
                 padding: '10px 16px',
-                color: '#f8fafc',
+                color: 'var(--text-primary)',
                 outline: 'none'
               }}
             />

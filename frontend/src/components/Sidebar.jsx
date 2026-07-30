@@ -1,8 +1,9 @@
 import React from 'react';
-import { LayoutDashboard, Cpu, Cloud, FileSpreadsheet, ShieldCheck, Settings, Server, TrendingDown } from 'lucide-react';
+import { LayoutDashboard, Cpu, Cloud, FileSpreadsheet, ShieldCheck, Settings, Server, TrendingDown, Info } from 'lucide-react';
 
 const Sidebar = ({ activeTab, setActiveTab }) => {
   const navItems = [
+    { id: 'about', label: 'Platform Overview', icon: Info },
     { id: 'placement', label: 'Placement Engine', icon: LayoutDashboard },
     { id: 'providers', label: 'Cloud Tariffs', icon: Cloud },
     { id: 'reports', label: 'Audit Reports', icon: FileSpreadsheet },
@@ -11,7 +12,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
   return (
     <aside style={{
       width: '240px',
-      background: '#0b0f19',
+      background: 'var(--bg-canvas)',
       borderRight: '1px solid rgba(255, 255, 255, 0.08)',
       display: 'flex',
       flexDirection: 'column',
@@ -22,7 +23,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
     }}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
         {/* Section Label */}
-        <div style={{ fontSize: '0.7rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '1px', paddingLeft: '12px' }}>
+        <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', paddingLeft: '12px' }}>
           Platform Navigation
         </div>
 
@@ -43,7 +44,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
                   borderRadius: '10px',
                   border: 'none',
                   background: isActive ? 'linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%)' : 'transparent',
-                  color: isActive ? '#06b6d4' : '#94a3b8',
+                  color: isActive ? '#06b6d4' : 'var(--text-secondary)',
                   fontWeight: isActive ? 600 : 500,
                   fontSize: '0.9rem',
                   cursor: 'pointer',
@@ -52,7 +53,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
                   borderLeft: isActive ? '3px solid #06b6d4' : '3px solid transparent'
                 }}
               >
-                <Icon size={18} color={isActive ? '#06b6d4' : '#64748b'} />
+                <Icon size={18} color={isActive ? '#06b6d4' : 'var(--text-muted)'} />
                 <span>{item.label}</span>
               </button>
             );
@@ -62,18 +63,18 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
 
       {/* Live Provider Health Card */}
       <div style={{
-        background: 'rgba(17, 24, 39, 0.6)',
+        background: 'var(--bg-surface)',
         border: '1px solid rgba(255, 255, 255, 0.05)',
         borderRadius: '12px',
         padding: '14px',
-        color: '#94a3b8',
+        color: 'var(--text-secondary)',
         fontSize: '0.78rem'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', color: '#10b981', fontWeight: 600 }}>
           <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', boxShadow: '0 0 8px #10b981' }}></span>
           <span>CSP Endpoints Active</span>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', color: '#cbd5e1', fontSize: '0.72rem', marginTop: '4px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)', fontSize: '0.72rem', marginTop: '4px' }}>
           <span>AWS / Azure / GCP / OCI</span>
           <span style={{ color: '#10b981' }}>100%</span>
         </div>

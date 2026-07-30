@@ -7,7 +7,7 @@ const Navbar = () => {
 
   return (
     <nav style={{
-      background: 'rgba(17, 24, 39, 0.9)',
+      background: 'var(--bg-glass)',
       borderBottom: '1px solid #1e293b',
       padding: '16px 32px',
       display: 'flex',
@@ -35,7 +35,7 @@ const Navbar = () => {
           <h2 style={{ fontSize: '1.25rem', fontFamily: 'Outfit, sans-serif', letterSpacing: '0.5px' }}>
             Cost<span style={{ color: '#06b6d4' }}>Matrix</span>
           </h2>
-          <p style={{ fontSize: '0.7rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '1px' }}>
+          <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1.2px' }}>
             FinOps Placement Engine
           </p>
         </div>
@@ -51,7 +51,7 @@ const Navbar = () => {
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderLeft: '1px solid #1e293b', paddingLeft: '16px' }}>
             <UserIcon size={18} color="#94a3b8" />
-            <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#f8fafc' }}>{user.name}</span>
+            <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)' }}>{user.name}</span>
           </div>
 
           <button className="btn-outline" onClick={logout} style={{ padding: '6px 12px', fontSize: '0.8rem' }}>
